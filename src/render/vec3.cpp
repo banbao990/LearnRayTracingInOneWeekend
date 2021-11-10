@@ -146,3 +146,11 @@ vec3 vec3::random_in_unit_hemisphere(const vec3& normal) {
 vec3 vec3::reflect(const vec3& ray_in, const vec3& normal) {
     return ray_in - 2 * normal.dot(ray_in) * normal;
 }
+
+vec3 vec3::refract(const vec3& ray_in, const vec3& normal,
+                   double refraction_ratio) {
+    double cos_theta = std::fmin(ray_in.dot(normal), 1.0);
+    vec3 pers = refraction_ratio * (ray_in - cos_theta * normal);
+    vec3 para = -std::sqrt(1 - pers.length_squared()) * normal;
+    return pers + para;
+}

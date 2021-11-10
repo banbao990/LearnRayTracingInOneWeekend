@@ -1,17 +1,20 @@
+#include <omp.h>  // TODO 加入并行
 #include <sys/stat.h>
+#include <time.h>
 #include <unistd.h>
 
 #include <camera.hpp>
 #include <color.hpp>
+#include <dielectric.hpp>
 #include <hit_record.hpp>
 #include <hittable.hpp>
 #include <hittable_list.hpp>
 #include <iomanip>
 #include <iostream>
 #include <lambertian.hpp>
-#include <metal.hpp>
 #include <material.hpp>
 #include <memory>
+#include <metal.hpp>
 #include <ray.hpp>
 #include <rtweekend.hpp>
 #include <shape.hpp>
@@ -19,28 +22,49 @@
 #include <vec3.hpp>
 
 using std::string;
+using std::to_string;
+
+string left_append(int a, int num = 2, char c = '0') {
+    string str = to_string(a);
+    int len = str.length();
+    if (len < num) {
+        str = string(num - len, c) + str;
+    }
+    return str;
+}
+
+double get_second() {
+    time_t nowtime;
+    struct tm* p;
+    time(&nowtime);
+    p = localtime(&nowtime);
+    return p->tm_sec + p->tm_min * 60.0 + p->tm_hour * 3600.0;
+}
 
 string get_file_name() {
-    string dir = "ppm/";
+    // 今天日期
+    time_t nowtime;
+    struct tm* p;
+    time(&nowtime);
+    p = localtime(&nowtime);
+    string dir =
+        "../ppm/" + left_append(p->tm_mon + 1) + left_append(p->tm_mday) + "/";
     //判断该文件夹是否存在
     if (access(dir.c_str(), 0) == -1) {
         mkdir(dir.c_str(), S_IRWXU);
     }
     for (int i = 0; i < 1000; ++i) {
-        string path = std::to_string(i);
-        path = dir + string(3 - path.length(), '0') + path + ".ppm";
+        string path = dir + left_append(i, 3) + ".ppm";
         if (access(path.c_str(), 0) != F_OK) {
             return path;
         }
     }
-    return "ppm/a.ppm";
+    return dir + "a.ppm";
 }
 
 // ray 没有归一化
 color ray_color_background(const ray& r);
 color ray_color_world(const ray& r, const hittable_list& world, int depth);
-
-// color write_color()
 
 int main(int argc, char** argv) {
     // 渲染结果
@@ -51,6 +75,9 @@ int main(int argc, char** argv) {
         file_name = get_file_name();
     }
 
+    // 时间
+    double t1 = get_second();
+
     // 重定向输出
     freopen(file_name.c_str(), "w", stdout);
 
@@ -59,20 +86,25 @@ int main(int argc, char** argv) {
     const double aspect_ratio = 16.0 / 9.0;
     const int image_width = 400;
     const int image_height = static_cast<int>(image_width / aspect_ratio);
-    const int spp = 10;
-    const int max_depth = 10;
+    const int spp = 1000;
+    const int max_depth = 100;
 
     // World
 
     hittable_list world;
     auto material_ground = make_shared<lambertian>(color(0.8, 0.8, 0));
-    auto material_center = make_shared<lambertian>(color(0.7, 0.7, 0.3));
-    auto material_left = make_shared<metal>(color(0.8, 0.8, 0.6));
-    auto material_right = make_shared<metal>(color(0.8, 0.6, 0.2));
+    auto material_center = make_shared<lambertian>(color(0.1, 0.2, 0.5));
+    auto material_left = make_shared<dielectric>(1.5);
+    auto material_right = make_shared<metal>(color(0.8, 0.6, 0.2), 0.0);
 
-    world.add(make_shared<sphere>(point3(0, -100.5, -1.0), 100.0, material_ground));
+    world.add(
+        make_shared<sphere>(point3(0, -100.5, -1.0), 100.0, material_ground));
     world.add(make_shared<sphere>(point3(0, 0, -1.0), 0.5, material_center));
     world.add(make_shared<sphere>(point3(-1.0, 0, -1.0), 0.5, material_left));
+    // trick, 半径设置为负数, 这样可以让法相反向
+    // (因为我们在计算法相的时候, 有一个除以半径的操作)
+    // world.add(make_shared<sphere>(
+    // point3(-1.0, 0, -1.0), -0.4, material_left));
     world.add(make_shared<sphere>(point3(1.0, 0, -1.0), 0.5, material_right));
 
     // Camera
@@ -81,23 +113,52 @@ int main(int argc, char** argv) {
 
     // Render
 
-    std::cout << "P3\n" << image_width << ' ' << image_height << "\n255\n";
-    for (int j = image_height - 1; j >= 0; --j) {
-        // 一次性设置域宽
-        std::cerr << "\rScanlines remaining: " << std::setw(3)
-                  << std::setfill('0') << std::right << j << std::flush;
-        for (int i = 0; i < image_width; ++i) {
+    // 为了并行服务
+    vec3** image_to_render = new vec3*[image_height];
+    for (int i = 0; i < image_height; ++i) {
+        image_to_render[i] = new vec3[image_width];
+    }
+
+    // 一次性设置域宽
+    // std::cerr << "\rScanlines remaining: " << std::setw(3) <<
+    // std::setfill('0') << std::right << 1 << std::flush;
+    string ok_str = string(image_height, '<');
+    std::cerr << "Start Rendering!\nOK Progress:\n|" << ok_str
+              << "|\nNow Progress:\n|" << std::flush;
+
+#pragma omp parallel for schedule(dynamic)
+    for (int i = image_height - 1; i >= 0; --i) {
+        std::cerr << "<" << std::flush;
+        for (int j = 0; j < image_width; ++j) {
             color pixel_color(0, 0, 0);
             for (int s = 0; s < spp; ++s) {
-                double u = (i + random_double()) / (image_width - 1);
-                double v = (j + random_double()) / (image_height - 1);
+                double u = (j + random_double()) / (image_width - 1);
+                double v = (i + random_double()) / (image_height - 1);
                 ray r = cam.get_ray(u, v);
                 pixel_color += ray_color_world(r, world, max_depth);
             }
-            write_color(std::cout, pixel_color, spp);
+            image_to_render[i][j] = pixel_color;
         }
     }
-    std::cerr << "\nDone.\n";
+
+    // 输出结果
+    std::cout << "P3\n" << image_width << ' ' << image_height << "\n255\n";
+    for (int i = image_height - 1; i >= 0; --i) {
+        for (int j = 0; j < image_width; ++j) {
+            write_color(std::cout, image_to_render[i][j], spp);
+        }
+    }
+
+    std::cerr << "|\nDone.\n" << std::flush;
+
+    // 释放
+    for (int i = 0; i < image_height; ++i) {
+        delete[] image_to_render[i];
+    }
+    delete[] image_to_render;
+
+    std::cerr << "It cost " << (get_second() - t1) << " seconds.\n"
+              << std::flush;
 }
 
 color ray_color_background(const ray& r) {

@@ -12,7 +12,7 @@ struct hit_record {
     point3 p;
     vec3 normal;
     double t;
-    bool front_face;
+    bool front_face;  // true: 外面往里, false: 里面往外
     shared_ptr<material> mat_ptr;
 
     void set_face_normal(const ray& r, const vec3& outward_normal);

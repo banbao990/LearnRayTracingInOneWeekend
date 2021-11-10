@@ -74,6 +74,11 @@ class vec3 {
 
     // 反射函数, 要求输入为两个单位向量, ray_in 指向交点, normal 从交点指向外面
     static vec3 reflect(const vec3& ray_in, const vec3& normal);
+
+    // 折射函数, 要求输入为两个单位向量, ray_in 指向交点, normal 从交点指向外面
+    // refraction_ratio = ray_in 所在平面折射率/ 折射光线所在平面折射率;
+    static vec3 refract(const vec3& ray_in, const vec3& normal,
+                        double refraction_ratio);
 };
 
 // 声明别名
