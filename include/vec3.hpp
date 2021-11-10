@@ -71,10 +71,11 @@ class vec3 {
     static vec3 random_in_unit_sphere_to_surface();
     // 返回一个长度为 1 的向量(顶点在法向半球内均匀采样)
     static vec3 random_in_unit_hemisphere(const vec3& normal);
-
+    // 均匀圆盘采样
+    // 返回平面 xOy 上, 原点为 (0,0,0), 半径为 1 的圆盘内部的均匀采样
+    static vec3 random_in_unit_disk();
     // 反射函数, 要求输入为两个单位向量, ray_in 指向交点, normal 从交点指向外面
     static vec3 reflect(const vec3& ray_in, const vec3& normal);
-
     // 折射函数, 要求输入为两个单位向量, ray_in 指向交点, normal 从交点指向外面
     // refraction_ratio = ray_in 所在平面折射率/ 折射光线所在平面折射率;
     static vec3 refract(const vec3& ray_in, const vec3& normal,

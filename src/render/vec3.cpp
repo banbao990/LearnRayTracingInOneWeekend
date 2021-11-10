@@ -143,6 +143,15 @@ vec3 vec3::random_in_unit_hemisphere(const vec3& normal) {
     return dir;
 }
 
+vec3 vec3::random_in_unit_disk() {
+    while (true) {
+        vec3 p = vec3(random_double(-1, 1), random_double(-1, 1), 0);
+        if (p.length_squared() < 1) {
+            return p;
+        }
+    }
+}
+
 vec3 vec3::reflect(const vec3& ray_in, const vec3& normal) {
     return ray_in - 2 * normal.dot(ray_in) * normal;
 }
