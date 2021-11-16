@@ -1,8 +1,8 @@
 #ifndef HITTABLE_H
 #define HITTABLE_H
 
-#include "ray.hpp"
-#include "hit_record.hpp"
+#include "../common/ray.h"
+#include "hit_record.h"
 
 // 场景中的物体
 class hittable {

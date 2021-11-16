@@ -7,7 +7,7 @@
 #include <random>
 
 // !!!important!!!
-// 为了防止出现循环包含导致的未定义问题, 不允许包含其他自定义头文件
+// 只会被 cpp 文件所包含
 
 // Usings
 

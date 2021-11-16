@@ -1,4 +1,6 @@
-#include <camera.hpp>
+#include <toyrender/common/camera.h>
+
+#include <toyrender/util/rtweekend.hpp>
 
 camera::camera() : camera(90.0, 16.0 / 9) {}
 

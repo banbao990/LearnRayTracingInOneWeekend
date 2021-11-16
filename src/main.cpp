@@ -1,24 +1,13 @@
 #include <omp.h>
 #include <sys/stat.h>
 #include <time.h>
+#include <toyrender/All.h>
 #include <unistd.h>
 
-#include <camera.hpp>
-#include <color.hpp>
-#include <dielectric.hpp>
-#include <hit_record.hpp>
-#include <hittable.hpp>
-#include <hittable_list.hpp>
 #include <iomanip>
 #include <iostream>
-#include <lambertian.hpp>
-#include <material.hpp>
 #include <memory>
-#include <metal.hpp>
-#include <ray.hpp>
-#include <rtweekend.hpp>
-#include <sphere.hpp>
-#include <vec3.hpp>
+#include <toyrender/util/rtweekend.hpp>
 
 hittable_list random_scene();
 

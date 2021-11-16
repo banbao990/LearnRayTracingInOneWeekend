@@ -1,5 +1,6 @@
+#include <toyrender/object/sphere.h>
+
 #include <cmath>
-#include <sphere.hpp>
 
 sphere::sphere() {}
 sphere::sphere(double _radius) : radius(_radius) {}

@@ -1,5 +1,7 @@
+#include <toyrender/common/vec3.h>
+
 #include <cmath>
-#include <vec3.hpp>
+#include <toyrender/util/rtweekend.hpp>
 
 // 构造函数
 vec3::vec3() : e{0, 0, 0} {}

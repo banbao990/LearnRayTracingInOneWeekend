@@ -1,8 +1,8 @@
 #ifndef LABERTIAN_H
 #define LABERTIAN_H
 
-#include "color.hpp"
-#include "material.hpp"
+#include "../common/color.h"
+#include "material.h"
 
 // 朗伯材质, 反射方向满足余弦定律
 class lambertian : public material {

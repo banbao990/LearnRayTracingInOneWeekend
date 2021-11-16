@@ -1,11 +1,10 @@
 #ifndef SPHERE_H
 #define SPHERE_H
 
-#include "hit_record.hpp"
-#include "hittable.hpp"
-#include "material.hpp"
-#include "rtweekend.hpp"
-#include "vec3.hpp"
+#include "../common/vec3.h"
+#include "../material/material.h"
+#include "hit_record.h"
+#include "hittable.h"
 
 // 球体
 class sphere : public hittable {

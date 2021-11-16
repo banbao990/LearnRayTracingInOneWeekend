@@ -1,12 +1,14 @@
 #ifndef HIT_RECORD_H
 #define HIT_RECORD_H
 
-#include "material.hpp"
-#include "ray.hpp"
-#include "rtweekend.hpp"
-#include "vec3.hpp"
+#include <memory>
+
+#include "../common/ray.h"
+#include "../common/vec3.h"
+#include "../material/material.h"
 
 class material;
+using std::shared_ptr;
 
 // 保存光线击中的点的信息
 struct hit_record {

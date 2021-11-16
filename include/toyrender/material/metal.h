@@ -1,8 +1,8 @@
 #ifndef METAL_H
 #define METAL_H
 
-#include "color.hpp"
-#include "material.hpp"
+#include "../common/color.h"
+#include "material.h"
 
 // 金属材质(纯镜面, 磨砂)
 class metal : public material {

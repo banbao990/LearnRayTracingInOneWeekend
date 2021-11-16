@@ -1,9 +1,9 @@
 #ifndef MATERIAL_H
 #define MATERIAL_H
 
-#include "color.hpp"
-#include "hit_record.hpp"
-#include "ray.hpp"
+#include "../common/color.h"
+#include "../common/ray.h"
+#include "../object/hit_record.h"
 
 struct hit_record;
 

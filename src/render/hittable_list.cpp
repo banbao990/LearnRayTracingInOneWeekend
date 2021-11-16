@@ -1,4 +1,4 @@
-#include <hittable_list.hpp>
+#include <toyrender/object/hittable_list.h>
 
 hittable_list::hittable_list() { objects.clear(); }
 hittable_list::hittable_list(shared_ptr<hittable> obj) { add(obj); }

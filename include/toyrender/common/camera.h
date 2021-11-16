@@ -1,8 +1,8 @@
 #ifndef CAMERA_H
 #define CAMERA_H
 
-#include "ray.hpp"
-#include "vec3.hpp"
+#include "ray.h"
+#include "vec3.h"
 
 // 相机类
 class camera {

@@ -2,7 +2,8 @@
 #define COLOR_H
 #include <iostream>
 
-#include "vec3.hpp"
+#include "vec3.h"
+
 using color = vec3;  // RGB color
 
 // 输出一行颜色值 "R G B"

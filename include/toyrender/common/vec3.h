@@ -3,8 +3,6 @@
 
 #include <iostream>
 
-#include "rtweekend.hpp"
-
 // 向量类
 class vec3 {
    private:

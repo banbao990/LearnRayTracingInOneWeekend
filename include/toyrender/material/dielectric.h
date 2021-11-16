@@ -1,8 +1,8 @@
 #ifndef DIELECTRIC_H
 #define DIELECTRIC_H
 
-#include "material.hpp"
-#include "vec3.hpp"
+#include "../common/vec3.h"
+#include "material.h"
 
 // 半反半透材质
 class dielectric : public material {

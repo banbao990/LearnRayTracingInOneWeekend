@@ -1,4 +1,4 @@
-#include <ray.hpp>
+#include <toyrender/common/ray.h>
 
 ray::ray() {}
 

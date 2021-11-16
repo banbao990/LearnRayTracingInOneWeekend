@@ -1,4 +1,4 @@
-#include <metal.hpp>
+#include <toyrender/material/metal.h>
 
 // 默认吸收一半, 反射一半
 metal::metal() : albedo(color(0.5, 0.5, 0.5)) {}

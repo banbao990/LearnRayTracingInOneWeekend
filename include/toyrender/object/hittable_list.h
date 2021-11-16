@@ -4,7 +4,7 @@
 #include <memory>
 #include <vector>
 
-#include "hittable.hpp"
+#include "hittable.h"
 
 using std::shared_ptr;
 
