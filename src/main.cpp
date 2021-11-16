@@ -44,7 +44,7 @@ int main(int argc, char** argv) {
 
     // Image
 
-    const int spp = 1000;
+    const int spp = 10;
     const int max_depth = 100;
     const double aspect_ratio = 16.0 / 9.0;
     // 图像分辨率
