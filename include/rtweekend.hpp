@@ -5,13 +5,17 @@
 #include <limits>
 #include <memory>
 #include <random>
-// #include <cstdlib>
+
+// !!!important!!!
+// 为了防止出现循环包含导致的未定义问题, 不允许包含其他自定义头文件
 
 // Usings
 
 using std::make_shared;
 using std::shared_ptr;
 using std::sqrt;
+using std::string;
+using std::to_string;
 
 // Constants
 
@@ -47,6 +51,17 @@ inline double clamp(double v, double min_v, double max_v) {
         return max_v;
     }
     return v;
+}
+
+// 返回一个数字(a)字符串表示形式, 不够左边补字符指定字符(c), 太多了则直接返回(不截断)
+// TODO 不声明为 inline 会出现重复包含的问题
+inline string left_append(int a, int num = 2, char c = '0') {
+    string str = to_string(a);
+    int len = str.length();
+    if (len < num) {
+        str = string(num - len, c) + str;
+    }
+    return str;
 }
 
 #endif

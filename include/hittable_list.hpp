@@ -8,6 +8,7 @@
 
 using std::shared_ptr;
 
+// 场景中物体的链表
 class hittable_list : public hittable {
    private:
     std::vector<shared_ptr<hittable>> objects;

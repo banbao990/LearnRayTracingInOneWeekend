@@ -1,4 +1,4 @@
-#include <omp.h>  // TODO 加入并行
+#include <omp.h>
 #include <sys/stat.h>
 #include <time.h>
 #include <unistd.h>
@@ -17,24 +17,12 @@
 #include <metal.hpp>
 #include <ray.hpp>
 #include <rtweekend.hpp>
-#include <shape.hpp>
 #include <sphere.hpp>
 #include <vec3.hpp>
 
-using std::string;
-using std::to_string;
-
 hittable_list random_scene();
 
-string left_append(int a, int num = 2, char c = '0') {
-    string str = to_string(a);
-    int len = str.length();
-    if (len < num) {
-        str = string(num - len, c) + str;
-    }
-    return str;
-}
-
+// 获取当前时间(距离 0 点的秒数)
 double get_second() {
     time_t nowtime;
     struct tm* p;
@@ -43,26 +31,8 @@ double get_second() {
     return p->tm_sec + p->tm_min * 60.0 + p->tm_hour * 3600.0;
 }
 
-string get_file_name() {
-    // 今天日期
-    time_t nowtime;
-    struct tm* p;
-    time(&nowtime);
-    p = localtime(&nowtime);
-    string dir =
-        "../ppm/" + left_append(p->tm_mon + 1) + left_append(p->tm_mday) + "/";
-    //判断该文件夹是否存在
-    if (access(dir.c_str(), 0) == -1) {
-        mkdir(dir.c_str(), S_IRWXU);
-    }
-    for (int i = 0; i < 1000; ++i) {
-        string path = dir + left_append(i, 3) + ".ppm";
-        if (access(path.c_str(), 0) != F_OK) {
-            return path;
-        }
-    }
-    return dir + "a.ppm";
-}
+// 获取一个文件名
+string get_file_name();
 
 // ray 没有归一化
 color ray_color_background(const ray& r);
@@ -254,4 +224,25 @@ hittable_list random_scene() {
     world.add(make_shared<sphere>(point3(4, 1, 0), 1.0, material3));
 
     return world;
+}
+
+string get_file_name() {
+    // 今天日期
+    time_t nowtime;
+    struct tm* p;
+    time(&nowtime);
+    p = localtime(&nowtime);
+    string dir =
+        "../ppm/" + left_append(p->tm_mon + 1) + left_append(p->tm_mday) + "/";
+    //判断该文件夹是否存在
+    if (access(dir.c_str(), 0) == -1) {
+        mkdir(dir.c_str(), S_IRWXU);
+    }
+    for (int i = 0; i < 1000; ++i) {
+        string path = dir + left_append(i, 3) + ".ppm";
+        if (access(path.c_str(), 0) != F_OK) {
+            return path;
+        }
+    }
+    return dir + "a.ppm";
 }

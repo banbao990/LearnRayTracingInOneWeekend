@@ -4,6 +4,7 @@
 #include "ray.hpp"
 #include "hit_record.hpp"
 
+// 场景中的物体
 class hittable {
    public:
     virtual bool hit(const ray& r, double t_min, double t_max,

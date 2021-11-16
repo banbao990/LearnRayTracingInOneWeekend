@@ -3,6 +3,7 @@
 
 #include "vec3.hpp"
 
+// 光线
 class ray {
    private:
     point3 origin;

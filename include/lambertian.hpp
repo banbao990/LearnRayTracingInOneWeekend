@@ -4,6 +4,7 @@
 #include "color.hpp"
 #include "material.hpp"
 
+// 朗伯材质, 反射方向满足余弦定律
 class lambertian : public material {
    private:
     color albedo;

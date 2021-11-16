@@ -8,6 +8,7 @@
 
 class material;
 
+// 保存光线击中的点的信息
 struct hit_record {
     point3 p;
     vec3 normal;

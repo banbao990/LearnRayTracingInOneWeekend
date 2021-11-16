@@ -7,6 +7,7 @@
 #include "rtweekend.hpp"
 #include "vec3.hpp"
 
+// 球体
 class sphere : public hittable {
    private:
     point3 center;

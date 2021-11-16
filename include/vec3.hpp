@@ -5,6 +5,7 @@
 
 #include "rtweekend.hpp"
 
+// 向量类
 class vec3 {
    private:
     double e[3];

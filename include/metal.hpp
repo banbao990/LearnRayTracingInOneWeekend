@@ -4,6 +4,7 @@
 #include "color.hpp"
 #include "material.hpp"
 
+// 金属材质(纯镜面, 磨砂)
 class metal : public material {
    private:
     color albedo;

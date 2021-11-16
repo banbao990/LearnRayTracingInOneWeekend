@@ -19,3 +19,7 @@ add_library(render SHARED ${render_lib_cpp})
 add_executable(MAIN src/main.cpp)
 # 声明生成可执行文件的时候需要链接动态库
 target_link_libraries(MAIN render)
+
+# 在发布的时候删除这两行, cmake 插件不加这两行 test.cpp 在 vscode 中找不到路径
+add_executable(TEST src/test.cpp)
+target_link_libraries(TEST render)

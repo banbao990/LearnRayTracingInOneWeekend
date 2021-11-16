@@ -4,6 +4,7 @@
 #include "ray.hpp"
 #include "vec3.hpp"
 
+// 相机类
 class camera {
    private:
     double aspect_ratio;
