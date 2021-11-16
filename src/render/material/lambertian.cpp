@@ -17,7 +17,7 @@ bool lambertian::scatter(const ray& r_in, const hit_record& rec,
         dir = rec.normal;  // 不太懂为什么可以这样处理
     }
 
-    scattered = ray(rec.p, dir);
+    scattered = ray(rec.p, dir, r_in.get_time());
     attenuation = albedo;
     return true;
 }

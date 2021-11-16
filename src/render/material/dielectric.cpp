@@ -30,7 +30,7 @@ bool dielectric::scatter(const ray& r_in, const hit_record& rec,
         // 折射
         dir_out = vec3::refract(ray_in_unit, rec.normal, refraction_ratio);
     }
-    scattered = ray(rec.p, dir_out);
+    scattered = ray(rec.p, dir_out, r_in.get_time());
     return true;
 }
 

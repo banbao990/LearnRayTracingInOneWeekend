@@ -10,8 +10,8 @@ camera::camera(double _vfov, double _aspect_ratio)
 
 camera::camera(double _vfov, double _aspect_ratio, point3 _lookfrom,
                point3 _lookat, vec3 _vup, double _aperture,
-               double _focus_distance)
-    : aspect_ratio(_aspect_ratio) {
+               double _focus_distance, double _time1, double _time2)
+    : aspect_ratio(_aspect_ratio), time1(_time1), time2(_time2) {
     double theta = degrees_to_radians(_vfov);
     double h = std::tan(theta / 2.0);
     double view_point_height = 2.0 * h;
@@ -43,6 +43,8 @@ ray camera::get_ray(double _u, double _v) const {
         vec3 rd = lens_radius * vec3::random_in_unit_disk();
         offset = u * rd.x() + v * rd.y();
     }
-    return ray(origin + offset, lower_left_corner + _u * horizontal +
-                                    _v * vertical - origin - offset);
+    return ray(
+        origin + offset,
+        lower_left_corner + _u * horizontal + _v * vertical - origin - offset,
+        random_double(time1, time2));
 }
