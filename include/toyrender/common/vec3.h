@@ -5,7 +5,8 @@
 
 // 向量类
 class vec3 {
-   private:
+   public:
+    // 方便修改设置为 public
     double e[3];
 
    public:
@@ -44,6 +45,7 @@ class vec3 {
 
     friend vec3 operator+(double t, const vec3& v);
     vec3 operator+(double t) const;
+    vec3 operator-(double t) const;
     friend vec3 operator*(double t, const vec3& v);
     vec3 operator*(double t) const;
     vec3 operator/(double t) const;

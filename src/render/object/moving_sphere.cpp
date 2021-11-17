@@ -1,4 +1,5 @@
 #include <toyrender/object/moving_sphere.h>
+
 #include <cmath>
 
 moving_sphere::moving_sphere(point3 _center1, point3 _center2, double _time1,
@@ -12,6 +13,11 @@ moving_sphere::moving_sphere(point3 _center1, point3 _center2, double _time1,
       mat_ptr(_matrial_ptr) {}
 
 moving_sphere::~moving_sphere() {}
+
+point3 moving_sphere::get_center(double t) const {
+    // 只是考虑简单的线性插值(运动是匀速直线运动)
+    return center1 + (t - time1) / (time2 - time1) * (center2 - center1);
+}
 
 bool moving_sphere::hit(const ray& r, double t_min, double t_max,
                         hit_record& rec) const {
@@ -43,6 +49,10 @@ bool moving_sphere::hit(const ray& r, double t_min, double t_max,
     }
 }
 
-point3 moving_sphere::get_center(double t) const {
-    return center1 + (t - time1) / (time2 - time1) * (center2 - center1);
+bool moving_sphere::bounding_box(double time0, double time1,
+                                 aabb& output_box) const {
+    aabb box0(get_center(time0) - radius, get_center(time0) + radius);
+    aabb box1(get_center(time1) - radius, get_center(time1) + radius);
+    output_box = box0 + box1;
+    return true;
 }

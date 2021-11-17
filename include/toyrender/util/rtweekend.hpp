@@ -53,7 +53,13 @@ inline double clamp(double v, double min_v, double max_v) {
     return v;
 }
 
-// 返回一个数字(a)字符串表示形式, 不够左边补字符指定字符(c), 太多了则直接返回(不截断)
+// 返回一个随机整数 [min_v, max_v)
+inline int random_int(int min_v, int max_v) {
+    return static_cast<int>(random_double(min_v, max_v));
+}
+
+// 返回一个数字(a)字符串表示形式, 不够左边补字符指定字符(c),
+// 太多了则直接返回(不截断)
 // TODO 不声明为 inline 会出现重复包含的问题
 inline string left_append(int a, int num = 2, char c = '0') {
     string str = to_string(a);

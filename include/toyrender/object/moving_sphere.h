@@ -1,6 +1,7 @@
 #ifndef MOVING_SPHERE_H
 #define MOVING_SPHERE_H
 
+#include "aabb.h"
 #include "hittable.h"
 
 class moving_sphere : public hittable {
@@ -16,9 +17,13 @@ class moving_sphere : public hittable {
                   shared_ptr<material> _matrial_ptr);
     ~moving_sphere();
 
+    point3 get_center(double t) const;
+
     virtual bool hit(const ray& r, double t_min, double t_max,
                      hit_record& rec) const override;
-    point3 get_center(double t) const;
+
+    virtual bool bounding_box(double time0, double time1,
+                              aabb& output_box) const override;
 };
 
 #endif

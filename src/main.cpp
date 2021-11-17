@@ -26,8 +26,17 @@ string get_file_name();
 // ray 没有归一化
 color ray_color_background(const ray& r);
 color ray_color_world(const ray& r, const hittable_list& world, int depth);
+color ray_color_world_bvh(const ray& r, const shared_ptr<bvh_node> world,
+                          int depth);
 
 int main(int argc, char** argv) {
+    // std::cout << (1.0 / 0.0) * 0.0 << std::endl;
+    // return 0;
+
+    // 参数
+    double t0, t1, t2;
+    t0 = get_second();
+
     // 渲染结果
     string file_name;
     if (argc == 2) {
@@ -35,9 +44,6 @@ int main(int argc, char** argv) {
     } else {
         file_name = get_file_name();
     }
-
-    // 时间
-    double t1 = get_second();
 
     // 重定向输出
     freopen(file_name.c_str(), "w", stdout);
@@ -77,9 +83,20 @@ int main(int argc, char** argv) {
     vec3 vup(0, 1, 0);
     auto dist_to_focus = 10.0;
     auto aperture = 0.1;
+    double t_min = 0.0, t_max = 1.0;
 
     camera cam(20, aspect_ratio, lookfrom, lookat, vup, aperture, dist_to_focus,
-               0.0, 1.0);
+               t_min, t_max);
+
+    // BVH
+    // 整个场景构造 BVH 并不会加速, 需要分析(场景相关)
+    t1 = get_second();
+    std::cerr << "Constructing BVH!" << std::endl;
+    shared_ptr<bvh_node> world_bvh = make_shared<bvh_node>(world, t_min, t_max);
+    t2 = get_second();
+    std::cerr << "Constructing BVH End!\n    BVH Cost : " << (t2 - t1)
+              << " Seconds!\n"
+              << std::flush;
 
     // Render
 
@@ -92,6 +109,7 @@ int main(int argc, char** argv) {
     // 一次性设置域宽
     // std::cerr << "\rScanlines remaining: " << std::setw(3) <<
     // std::setfill('0') << std::right << 1 << std::flush;
+    t1 = get_second();
     string ok_str = string(image_height, '<');
     std::cerr << "Start Rendering!\nOK Progress:\n|" << ok_str
               << "|\nNow Progress:\n|" << std::flush;
@@ -105,11 +123,16 @@ int main(int argc, char** argv) {
                 double u = (j + random_double()) / (image_width - 1);
                 double v = (i + random_double()) / (image_height - 1);
                 ray r = cam.get_ray(u, v);
-                pixel_color += ray_color_world(r, world, max_depth);
+                // pixel_color += ray_color_world(r, world, max_depth);
+                pixel_color += ray_color_world_bvh(r, world_bvh, max_depth);
             }
             image_to_render[i][j] = pixel_color;
         }
     }
+    t2 = get_second();
+    std::cerr << "|\nRedering Done!\n    Rendering Cost: " << (t2 - t1)
+              << " Seconds!\n"
+              << std::flush;
 
     // 输出结果
     std::cout << "P3\n" << image_width << ' ' << image_height << "\n255\n";
@@ -119,15 +142,13 @@ int main(int argc, char** argv) {
         }
     }
 
-    std::cerr << "|\nDone.\n" << std::flush;
-
     // 释放
     for (int i = 0; i < image_height; ++i) {
         delete[] image_to_render[i];
     }
     delete[] image_to_render;
 
-    std::cerr << "It cost " << (get_second() - t1) << " seconds.\n"
+    std::cerr << "    Total cost " << (get_second() - t0) << " Seconds.\n"
               << std::flush;
 }
 
@@ -136,6 +157,33 @@ color ray_color_background(const ray& r) {
     double t = 0.5 * (unit_direction.y() + 1.0);
     // 线性混合两种颜色
     return (1.0 - t) * color(1.0, 1.0, 1.0) + t * color(0.5, 0.7, 1.0);
+}
+
+color ray_color_world_bvh(const ray& r, const shared_ptr<bvh_node> world,
+                          int depth) {
+    // 限制深度, 避免无止境递归下去
+    if (depth <= 0) {
+        return vec3(0, 0, 0);
+    }
+
+    hit_record rec;
+    // shadow acne problem
+    // 由于浮点数精度问题, 可能会出现发射出去的和自己相交的问题
+    // 因此我们设置 min_v = 0.001 而不是 0
+    if (world->hit(r, 0.001, infinity, rec)) {
+        // (1) 命中球体则直接返回法线
+        // return 0.5 * (rec.normal + 1.0);  // [-1, 1] => [0, 1]
+
+        // (2) 根据材质返回光线
+        ray scattered_ray;
+        color attenuation;
+        if (rec.mat_ptr->scatter(r, rec, attenuation, scattered_ray)) {
+            return attenuation *
+                   ray_color_world_bvh(scattered_ray, world, depth - 1);
+        }
+        return color(0, 0, 0);
+    }
+    return ray_color_background(r);
 }
 
 color ray_color_world(const ray& r, const hittable_list& world, int depth) {

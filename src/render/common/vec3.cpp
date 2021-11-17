@@ -79,6 +79,7 @@ vec3 operator+(double t, const vec3& v) {
 }
 
 vec3 vec3::operator+(double t) const { return t + (*this); }
+vec3 vec3::operator-(double t) const { return -t + (*this); }
 
 vec3 operator*(double t, const vec3& v) {
     return vec3(v.e[0] * t, v.e[1] * t, v.e[2] * t);

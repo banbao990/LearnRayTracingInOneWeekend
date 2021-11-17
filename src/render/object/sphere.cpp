@@ -8,6 +8,9 @@ sphere::sphere(point3 _center, double _radius, shared_ptr<material> _mat_ptr)
     : center(_center), radius(_radius), mat_ptr(_mat_ptr) {}
 sphere::~sphere() {}
 
+vec3 sphere::get_center() const { return center; }
+double sphere::get_radius() const { return radius; }
+
 bool sphere::hit(const ray& r, double t_min, double t_max,
                  hit_record& rec) const {
     vec3 oc = r.get_origin() - center;
@@ -37,6 +40,8 @@ bool sphere::hit(const ray& r, double t_min, double t_max,
     }
 }
 
-vec3 sphere::get_center() const { return center; }
-
-double sphere::get_radius() const { return radius; }
+bool sphere::bounding_box(double time0, double time1, aabb& output_box) const {
+    // 不会动
+    output_box = aabb(center - radius, center + radius);
+    return true;
+}
