@@ -17,6 +17,8 @@
 #include "object/hittable_list.h"
 #include "object/moving_sphere.h"
 #include "object/sphere.h"
+#include "scene_models/scene_config.h"
+#include "scene_models/scene_model.h"
 #include "texture/checker_texture.h"
 #include "texture/solid_color.h"
 #include "texture/texture.h"
