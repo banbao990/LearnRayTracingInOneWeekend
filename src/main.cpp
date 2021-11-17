@@ -26,8 +26,6 @@ string get_file_name();
 // ray 没有归一化
 color ray_color_background(const ray& r);
 color ray_color_world(const ray& r, const hittable_list& world, int depth);
-color ray_color_world_bvh(const ray& r, const shared_ptr<bvh_node> world,
-                          int depth);
 
 int main(int argc, char** argv) {
     // std::cout << (1.0 / 0.0) * 0.0 << std::endl;
@@ -92,7 +90,11 @@ int main(int argc, char** argv) {
     // 整个场景构造 BVH 并不会加速, 需要分析(场景相关)
     t1 = get_second();
     std::cerr << "Constructing BVH!" << std::endl;
-    shared_ptr<bvh_node> world_bvh = make_shared<bvh_node>(world, t_min, t_max);
+    auto cc = world.get_count();
+    shared_ptr<bvh_node> w_bvh_t = make_shared<bvh_node>(world, t_min, t_max);
+    hittable_list world_bvh;
+    world_bvh.add(w_bvh_t);
+
     t2 = get_second();
     std::cerr << "Constructing BVH End!\n    BVH Cost : " << (t2 - t1)
               << " Seconds!\n"
@@ -124,7 +126,7 @@ int main(int argc, char** argv) {
                 double v = (i + random_double()) / (image_height - 1);
                 ray r = cam.get_ray(u, v);
                 // pixel_color += ray_color_world(r, world, max_depth);
-                pixel_color += ray_color_world_bvh(r, world_bvh, max_depth);
+                pixel_color += ray_color_world(r, world_bvh, max_depth);
             }
             image_to_render[i][j] = pixel_color;
         }
@@ -157,33 +159,6 @@ color ray_color_background(const ray& r) {
     double t = 0.5 * (unit_direction.y() + 1.0);
     // 线性混合两种颜色
     return (1.0 - t) * color(1.0, 1.0, 1.0) + t * color(0.5, 0.7, 1.0);
-}
-
-color ray_color_world_bvh(const ray& r, const shared_ptr<bvh_node> world,
-                          int depth) {
-    // 限制深度, 避免无止境递归下去
-    if (depth <= 0) {
-        return vec3(0, 0, 0);
-    }
-
-    hit_record rec;
-    // shadow acne problem
-    // 由于浮点数精度问题, 可能会出现发射出去的和自己相交的问题
-    // 因此我们设置 min_v = 0.001 而不是 0
-    if (world->hit(r, 0.001, infinity, rec)) {
-        // (1) 命中球体则直接返回法线
-        // return 0.5 * (rec.normal + 1.0);  // [-1, 1] => [0, 1]
-
-        // (2) 根据材质返回光线
-        ray scattered_ray;
-        color attenuation;
-        if (rec.mat_ptr->scatter(r, rec, attenuation, scattered_ray)) {
-            return attenuation *
-                   ray_color_world_bvh(scattered_ray, world, depth - 1);
-        }
-        return color(0, 0, 0);
-    }
-    return ray_color_background(r);
 }
 
 color ray_color_world(const ray& r, const hittable_list& world, int depth) {
