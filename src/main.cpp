@@ -87,18 +87,20 @@ int main(int argc, char** argv) {
                t_min, t_max);
 
     // BVH
-    // 整个场景构造 BVH 并不会加速, 需要分析(场景相关)
-    t1 = get_second();
-    std::cerr << "Constructing BVH!" << std::endl;
-    auto cc = world.get_count();
-    shared_ptr<bvh_node> w_bvh_t = make_shared<bvh_node>(world, t_min, t_max);
-    hittable_list world_bvh;
-    world_bvh.add(w_bvh_t);
+    // (小场景) 构造 BVH 并不会加速
+    // t1 = get_second();
+    // std::cerr << "Constructing BVH!" << std::endl;
+    // auto cc = world.get_count();
+    // shared_ptr<bvh_node> w_bvh_t = make_shared<bvh_node>(world, t_min,
+    // t_max);
 
-    t2 = get_second();
-    std::cerr << "Constructing BVH End!\n    BVH Cost : " << (t2 - t1)
-              << " Seconds!\n"
-              << std::flush;
+    // hittable_list world_bvh;
+    // world_bvh.add(w_bvh_t);
+    // t2 = get_second();
+
+    // std::cerr << "Constructing BVH End!\n    BVH Cost : " << (t2 - t1)
+    //           << " Seconds!\n"
+    //           << std::flush;
 
     // Render
 
@@ -125,8 +127,8 @@ int main(int argc, char** argv) {
                 double u = (j + random_double()) / (image_width - 1);
                 double v = (i + random_double()) / (image_height - 1);
                 ray r = cam.get_ray(u, v);
-                // pixel_color += ray_color_world(r, world, max_depth);
-                pixel_color += ray_color_world(r, world_bvh, max_depth);
+                pixel_color += ray_color_world(r, world, max_depth);
+                // pixel_color += ray_color_world(r, world_bvh, max_depth);
             }
             image_to_render[i][j] = pixel_color;
         }
@@ -191,7 +193,9 @@ color ray_color_world(const ray& r, const hittable_list& world, int depth) {
 hittable_list random_scene() {
     hittable_list world;
 
-    auto ground_material = make_shared<lambertian>(color(0.5, 0.5, 0.5));
+    auto checker = make_shared<checker_texture>(color(0.2, 0.3, 0.1),
+                                                color(0.9, 0.9, 0.9));
+    auto ground_material = make_shared<lambertian>(checker);
     world.add(make_shared<sphere>(point3(0, -1000, 0), 1000, ground_material));
 
     for (int a = -11; a < 11; a++) {

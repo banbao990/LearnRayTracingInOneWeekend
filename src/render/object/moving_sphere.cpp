@@ -1,4 +1,5 @@
 #include <toyrender/object/moving_sphere.h>
+#include <toyrender/object/sphere.h>
 
 #include <cmath>
 
@@ -45,6 +46,7 @@ bool moving_sphere::hit(const ray& r, double t_min, double t_max,
         vec3 outward_normal = (rec.p - center) / radius;
         rec.set_face_normal(r, outward_normal);
         rec.mat_ptr = mat_ptr;
+        sphere::get_sphere_uv(outward_normal, rec.u, rec.v);
         return true;
     }
 }

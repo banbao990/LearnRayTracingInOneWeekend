@@ -17,6 +17,9 @@
 #include "object/hittable_list.h"
 #include "object/moving_sphere.h"
 #include "object/sphere.h"
+#include "texture/checker_texture.h"
+#include "texture/solid_color.h"
+#include "texture/texture.h"
 // #include "util/rtweekend.hpp"
 
 #endif

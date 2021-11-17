@@ -1,6 +1,7 @@
 #include <toyrender/object/sphere.h>
 
 #include <cmath>
+#include <toyrender/util/rtweekend.hpp>
 
 sphere::sphere() {}
 sphere::sphere(double _radius) : radius(_radius) {}
@@ -36,6 +37,7 @@ bool sphere::hit(const ray& r, double t_min, double t_max,
         vec3 outward_normal = (rec.p - center) / radius;
         rec.set_face_normal(r, outward_normal);
         rec.mat_ptr = mat_ptr;
+        get_sphere_uv(outward_normal, rec.u, rec.v);
         return true;
     }
 }
@@ -44,4 +46,15 @@ bool sphere::bounding_box(double time0, double time1, aabb& output_box) const {
     // 不会动
     output_box = aabb(center - radius, center + radius);
     return true;
+}
+
+//
+// static
+//
+
+void sphere::get_sphere_uv(const point3& p, double& u, double& v) {
+    double theta = std::acos(-p.y());
+    double phi = std::atan2(-p.z(), p.x()) + pi;
+    u = phi / pi2;
+    v = theta / pi;
 }

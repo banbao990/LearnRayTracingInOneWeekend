@@ -13,6 +13,7 @@ class vec3 {
     // 构造函数
     vec3();
     vec3(double e0, double e1, double e2);
+    vec3(double e0);
 
     // 析构函数
     ~vec3();

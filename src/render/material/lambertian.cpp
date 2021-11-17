@@ -1,8 +1,12 @@
 #include <toyrender/material/lambertian.h>
+#include <toyrender/texture/solid_color.h>
+using std::make_shared;
 
 // 默认吸收一半, 反射一半
-lambertian::lambertian() : albedo(color(0.5, 0.5, 0.5)) {}
-lambertian::lambertian(color _albedo) : albedo(_albedo) {}
+lambertian::lambertian() : lambertian(color(0.5, 0.5, 0.5)) {}
+lambertian::lambertian(color _albedo)
+    : albedo(make_shared<solid_color>(_albedo)) {}
+lambertian::lambertian(shared_ptr<texture> _albebo) : albedo(_albebo) {}
 lambertian::~lambertian() {}
 
 bool lambertian::scatter(const ray& r_in, const hit_record& rec,
@@ -18,6 +22,6 @@ bool lambertian::scatter(const ray& r_in, const hit_record& rec,
     }
 
     scattered = ray(rec.p, dir, r_in.get_time());
-    attenuation = albedo;
+    attenuation = albedo->value(rec.u, rec.v, rec.p);
     return true;
 }
