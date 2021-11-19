@@ -1,5 +1,6 @@
 #include <toyrender/All.h>
-#include <toyrender/scene_models/scene_config.h>
+#include <toyrender/scene_models/scene_model.h>
+#include <toyrender/texture/image_texture.h>
 
 #include <toyrender/util/rtweekend.hpp>
 
@@ -153,4 +154,26 @@ hittable_list two_perlin_spheres(shared_ptr<scene_config> config) {
                                   make_shared<lambertian>(perlin_texture)));
 
     return world;
+}
+
+// 一个地球场景, 测试 image_texture
+hittable_list earth(shared_ptr<scene_config> config) {
+    // Camera
+    double vfov = 20.0;
+    auto aperture = 0.0;  // 没有模糊
+    point3 lookfrom(13, 2, 3);
+    point3 lookat = point3(0, 0, 0);
+    vec3 vup(0, 1, 0);
+    auto dist_to_focus = 10.0;
+    double t_min = 0.0, t_max = 1.0;
+
+    config->cam =
+        make_shared<camera>(vfov, config->aspect_ratio, lookfrom, lookat, vup,
+                            aperture, dist_to_focus, t_min, t_max);
+
+    // World
+    auto earth_texture = make_shared<image_texture>("images/earthmap.jpg");
+    auto earth_surface = make_shared<lambertian>(earth_texture);
+    auto globe = make_shared<sphere>(point3(0, 0, 0), 2, earth_surface);
+    return hittable_list(globe);
 }

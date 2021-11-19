@@ -29,3 +29,6 @@ target_link_libraries(MAIN render)
 # 在发布的时候删除这两行, cmake 插件不加这两行 test.cpp 在 vscode 中找不到路径
 add_executable(TEST src/test.cpp)
 target_link_libraries(TEST render)
+
+# 拷贝资源文件
+file(COPY "images/earthmap.jpg" DESTINATION "images/")

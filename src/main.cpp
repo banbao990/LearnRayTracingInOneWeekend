@@ -74,7 +74,8 @@ int main(int argc, char** argv) {
     // hittable_list world = basis_scene1(config);
     // hittable_list world = random_scene1(config);
     // hittable_list world = two_spheres(config);
-    hittable_list world = two_perlin_spheres(config);
+    // hittable_list world = two_perlin_spheres(config);
+    hittable_list world = earth(config);
 
     shared_ptr<camera> cam = config->cam;
 
@@ -127,7 +128,7 @@ int main(int argc, char** argv) {
     }
     t2 = get_second();
     std::cerr << "|\nRedering Done!\n    Rendering Cost: " << (t2 - t1)
-              << " Seconds!\n"
+              << " Seconds!\nWrite to the target file: " << file_name << '\n'
               << std::flush;
 
     // 输出结果
