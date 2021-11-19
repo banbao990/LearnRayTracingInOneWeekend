@@ -27,8 +27,20 @@ string get_file_name();
 color ray_color_background(const ray& r);
 color ray_color_world(const ray& r, const hittable_list& world, int depth);
 
+// 输出一张 perlin 噪声图
+void write_out_the_whole_noise() {
+    int H = 256;
+    perlin p;
+    std::cout << "P3\n" << H << ' ' << H << "\n255\n";
+    for (int i = H - 1; i >= 0; --i) {
+        for (int j = 0; j < H; ++j) {
+            write_color(std::cout, p.noise(vec3(i, j, 0)), 1);
+        }
+    }
+}
+
 int main(int argc, char** argv) {
-    // std::cout << (1.0 / 0.0) * 0.0 << std::endl;
+    // std::cout << a << std::endl;
     // return 0;
 
     // 参数
@@ -48,8 +60,8 @@ int main(int argc, char** argv) {
 
     // Image
 
-    const int spp = 10;
-    const int max_depth = 100;
+    const int spp = 100;
+    const int max_depth = 10;
     const double aspect_ratio = 16.0 / 9.0;
     // 图像分辨率
     const int image_width = 400;
@@ -59,9 +71,11 @@ int main(int argc, char** argv) {
     shared_ptr<scene_config> config = make_shared<scene_config>();
     config->aspect_ratio = aspect_ratio;
 
-    hittable_list world = basis_scene1(config);
+    // hittable_list world = basis_scene1(config);
     // hittable_list world = random_scene1(config);
-    
+    // hittable_list world = two_spheres(config);
+    hittable_list world = two_perlin_spheres(config);
+
     shared_ptr<camera> cam = config->cam;
 
     // BVH

@@ -20,6 +20,8 @@
 #include "scene_models/scene_config.h"
 #include "scene_models/scene_model.h"
 #include "texture/checker_texture.h"
+#include "texture/perlin.h"
+#include "texture/perlin_noise_texture.h"
 #include "texture/solid_color.h"
 #include "texture/texture.h"
 // #include "util/rtweekend.hpp"

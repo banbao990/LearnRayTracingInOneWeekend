@@ -2,3 +2,4 @@
 /src/test.cpp
 /ppm/*
 .vscode/*
+/src/ignore/*
