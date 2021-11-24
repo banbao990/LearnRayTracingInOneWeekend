@@ -2,7 +2,7 @@
 
 #include <toyrender/util/rtweekend.hpp>
 
-void write_color(std::ostream &out, color pixel_color, int spp) {
+void write_color(std::ostream& out, color pixel_color, int spp) {
     // 除以样本数
     double scale = 1.0 / spp;
     pixel_color *= scale;

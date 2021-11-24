@@ -5,23 +5,10 @@
 #include <limits>
 #include <memory>
 #include <random>
+#include "h_help.h"
 
 // !!!important!!!
 // 只会被 cpp 文件所包含
-
-// Usings
-
-using std::make_shared;
-using std::shared_ptr;
-using std::sqrt;
-using std::string;
-using std::to_string;
-
-// Constants
-
-const double infinity = std::numeric_limits<double>::infinity();
-const double pi = 3.1415926535897932385;
-const double pi2 = 2 * pi;
 
 // Utility Functions
 

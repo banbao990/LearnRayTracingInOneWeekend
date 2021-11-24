@@ -3,6 +3,7 @@
 
 #include "texture.h"
 
+// 图片纹理
 class image_texture : public texture {
    private:
     unsigned char* data;

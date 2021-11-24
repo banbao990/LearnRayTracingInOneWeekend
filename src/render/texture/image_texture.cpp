@@ -19,7 +19,9 @@ image_texture::image_texture(const char* filename) {
     bytes_per_scanline = bytes_per_pixel * width;
 }
 
-image_texture::~image_texture() { stbi_image_free(data); }
+image_texture::~image_texture() {
+    stbi_image_free(data);
+}
 
 color image_texture::value(double u, double v, const point3& p) const {
     // 如果没有把图片数据读取进来, 则使用某个颜色作为暗示(大红色)

@@ -14,10 +14,10 @@ class bvh_node : public hittable {
     bvh_node();
     // TODO 构建 BVH 的不同方式
     // 在构造函数中生成 bvh
-    bvh_node(const hittable_list& list, double time0, double time1);
+    bvh_node(const hittable_list list, double time0, double time1);
     // 在构造函数中生成 bvh 
     // [start, end)
-    bvh_node(const std::vector<shared_ptr<hittable>>& src_object, size_t start,
+    bvh_node(const std::vector<shared_ptr<hittable>> src_object, size_t start,
              size_t end, double time0, double time1);
     ~bvh_node();
 

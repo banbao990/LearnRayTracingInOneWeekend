@@ -11,8 +11,17 @@ struct hit_record;
 class material {
    public:
     // 给定一条入射光线, 返回一条出射光线(BRDF), 设置 attenuation
-    virtual bool scatter(const ray& r_in, const hit_record& rec,
-                         color& attenuation, ray& scattered) const = 0;
+    // 如果是发光材质, 则返回 false
+    virtual bool scatter(const ray& r_in,
+                         const hit_record& rec,
+                         color& attenuation,
+                         ray& scattered) const = 0;
+
+    // 根据纹理坐标以及
+    // 默认材质不发光
+    virtual color emitted(double u, double v, const point3& p) const {
+        return color(0);
+    };
 };
 
 #endif

@@ -19,6 +19,7 @@ struct hit_record {
     bool front_face;  // true: 外面往里, false: 里面往外
     shared_ptr<material> mat_ptr;
 
+    // 设置 front_face, 判定是内部还是外部
     void set_face_normal(const ray& r, const vec3& outward_normal);
 };
 

@@ -6,11 +6,14 @@
 
 bvh_node::bvh_node() {}
 
-bvh_node::bvh_node(const hittable_list& list, double time0, double time1)
+bvh_node::bvh_node(const hittable_list list, double time0, double time1)
     : bvh_node(list.get_objects(), 0, list.get_count(), time0, time1) {}
 
-bvh_node::bvh_node(const std::vector<shared_ptr<hittable>>& src_object,
-                   size_t start, size_t end, double time0, double time1) {
+bvh_node::bvh_node(const std::vector<shared_ptr<hittable>> src_object,
+                   size_t start,
+                   size_t end,
+                   double time0,
+                   double time1) {
     // (1) naive 策略
     // 找到包围盒最大的轴方向
     // TODO 这里是随机选择一个方向
@@ -59,7 +62,9 @@ bvh_node::bvh_node(const std::vector<shared_ptr<hittable>>& src_object,
 
 bvh_node::~bvh_node() {}
 
-bool bvh_node::hit(const ray& r, double t_min, double t_max,
+bool bvh_node::hit(const ray& r,
+                   double t_min,
+                   double t_max,
                    hit_record& rec) const {
     // 没有击中包围盒, 则 miss
     if (!box.hit(r, t_min, t_max)) {
@@ -75,7 +80,8 @@ bool bvh_node::hit(const ray& r, double t_min, double t_max,
     return hit_left || hit_right;
 }
 
-bool bvh_node::bounding_box(double time0, double time1,
+bool bvh_node::bounding_box(double time0,
+                            double time1,
                             aabb& output_box) const {
     output_box = box;
     return true;

@@ -24,8 +24,11 @@ double get_second() {
 string get_file_name();
 
 // ray 没有归一化
-color ray_color_background(const ray& r);
-color ray_color_world(const ray& r, const hittable_list& world, int depth);
+color ray_color_background(const ray& r,
+                           const shared_ptr<scene_config>& config);
+color ray_color_world(const ray& r,
+                      const shared_ptr<scene_config>& config,
+                      int depth);
 
 // 输出一张 perlin 噪声图
 void write_out_the_whole_noise() {
@@ -58,24 +61,22 @@ int main(int argc, char** argv) {
     // 重定向输出
     freopen(file_name.c_str(), "w", stdout);
 
-    // Image
-
-    const int spp = 100;
-    const int max_depth = 10;
-    const double aspect_ratio = 16.0 / 9.0;
-    // 图像分辨率
-    const int image_width = 400;
-    const int image_height = static_cast<int>(image_width / aspect_ratio);
-
+    //
     // World & Camera
-    shared_ptr<scene_config> config = make_shared<scene_config>();
-    config->aspect_ratio = aspect_ratio;
+    //
 
-    // hittable_list world = basis_scene1(config);
-    // hittable_list world = random_scene1(config);
-    // hittable_list world = two_spheres(config);
-    // hittable_list world = two_perlin_spheres(config);
-    hittable_list world = earth(config);
+    shared_ptr<scene_config> config = make_shared<scene_config>();
+    config->aspect_ratio = 16.0 / 9.0;
+    config->image_width = 400;
+
+    // basis_scene1(config);
+    // random_scene1(config);
+    // two_spheres(config);
+    // two_perlin_spheres(config);
+    // earth(config);
+    // simple_light(config);
+    // simple_light2(config);
+    cornell_box(config);
 
     shared_ptr<camera> cam = config->cam;
 
@@ -95,7 +96,20 @@ int main(int argc, char** argv) {
     //           << " Seconds!\n"
     //           << std::flush;
 
+    //
+    // Image
+    //
+
+    const int spp = 1000;
+    const int max_depth = 10;
+    const double aspect_ratio = config->aspect_ratio;
+    // 图像分辨率
+    const int image_width = config->image_width;
+    const int image_height = static_cast<int>(image_width / aspect_ratio);
+
+    //
     // Render
+    //
 
     // 为了并行服务
     vec3** image_to_render = new vec3*[image_height];
@@ -120,7 +134,7 @@ int main(int argc, char** argv) {
                 double u = (j + random_double()) / (image_width - 1);
                 double v = (i + random_double()) / (image_height - 1);
                 ray r = cam->get_ray(u, v);
-                pixel_color += ray_color_world(r, world, max_depth);
+                pixel_color += ray_color_world(r, config, max_depth);
                 // pixel_color += ray_color_world(r, world_bvh, max_depth);
             }
             image_to_render[i][j] = pixel_color;
@@ -149,37 +163,53 @@ int main(int argc, char** argv) {
               << std::flush;
 }
 
-color ray_color_background(const ray& r) {
-    vec3 unit_direction = r.get_direction_unit();
-    double t = 0.5 * (unit_direction.y() + 1.0);
-    // 线性混合两种颜色
-    return (1.0 - t) * color(1.0, 1.0, 1.0) + t * color(0.5, 0.7, 1.0);
+color ray_color_background(const ray& r,
+                           const shared_ptr<scene_config>& config) {
+    // 1. 线性混合两种颜色
+    // vec3 unit_direction = r.get_direction_unit();
+    // double t = 0.5 * (unit_direction.y() + 1.0);
+    // return (1.0 - t) * color(1.0, 1.0, 1.0) + t * color(0.5, 0.7, 1.0);
+
+    // 2. 直接返回一种背景色
+    return config->background_color;
 }
 
-color ray_color_world(const ray& r, const hittable_list& world, int depth) {
+color ray_color_world(const ray& r,
+                      const shared_ptr<scene_config>& config,
+                      int depth) {
     // 限制深度, 避免无止境递归下去
     if (depth <= 0) {
         return vec3(0, 0, 0);
     }
 
     hit_record rec;
+
+    // 没有击中任何物体, 直接返回背景色
     // shadow acne problem
     // 由于浮点数精度问题, 可能会出现发射出去的和自己相交的问题
     // 因此我们设置 min_v = 0.001 而不是 0
-    if (world.hit(r, 0.001, infinity, rec)) {
-        // (1) 命中球体则直接返回法线
-        // return 0.5 * (rec.normal + 1.0);  // [-1, 1] => [0, 1]
-
-        // (2) 根据材质返回光线
-        ray scattered_ray;
-        color attenuation;
-        if (rec.mat_ptr->scatter(r, rec, attenuation, scattered_ray)) {
-            return attenuation *
-                   ray_color_world(scattered_ray, world, depth - 1);
-        }
-        return color(0, 0, 0);
+    if (!config->world->hit(r, 0.001, infinity, rec)) {
+        // return ray_color_background(r, config);
+        return config->background_color;
     }
-    return ray_color_background(r);
+
+    // (1) 命中球体则直接返回法线
+    // return 0.5 * (rec.normal + 1.0);  // [-1, 1] => [0, 1]
+
+    // (2) 根据材质返回光线
+    ray scattered_ray;
+    color attenuation;
+    color emitted;
+
+    emitted = rec.mat_ptr->emitted(rec.u, rec.v, rec.p);
+    // 暂时的材质实现, 光源和非光源是完全分开的(光源不散射)
+    // 光源(不进行散射的光源)
+    if (!rec.mat_ptr->scatter(r, rec, attenuation, scattered_ray)) {
+        return emitted;
+    }
+    // 非光源(可能发光)
+    return emitted +
+           attenuation * ray_color_world(scattered_ray, config, depth - 1);
 }
 
 string get_file_name() {

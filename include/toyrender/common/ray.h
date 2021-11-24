@@ -12,7 +12,7 @@ class ray {
 
    public:
     ray();
-    ray(const point3& _origin, const vec3& _direction,
+    ray(const point3 _origin, const vec3 _direction,
         const double _time = 0);
     ~ray();
 

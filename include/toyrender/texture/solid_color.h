@@ -10,7 +10,7 @@ class solid_color : public texture {
 
    public:
     solid_color();
-    solid_color(color &c);
+    solid_color(color c);
     solid_color(double r, double g, double b);
     ~solid_color();
 
