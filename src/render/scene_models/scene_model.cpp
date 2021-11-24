@@ -265,7 +265,7 @@ void simple_light2(shared_ptr<scene_config>& config) {
         3, 5, 1, 3, -2, make_shared<diffuse_light>(color(4, 0, 0))));
     world->add(make_shared<yz_rect>(
         1, 3, 3, 5, -2, make_shared<diffuse_light>(color(0, 4, 0))));
-    world->add(make_shared<zx_rect>(
+    world->add(make_shared<xz_rect>(
         1, 3, 1, 3, 6, make_shared<diffuse_light>(color(0, 0, 4))));
 
     config->world = world;
@@ -291,18 +291,36 @@ void cornell_box(shared_ptr<scene_config>& config) {
     config->world = make_shared<hittable_list>();
     shared_ptr<hittable_list> world = make_shared<hittable_list>();
 
-    auto red = make_shared<lambertian>(color(.65, .05, .05));
-    auto white = make_shared<lambertian>(color(.73, .73, .73));
-    auto green = make_shared<lambertian>(color(.12, .45, .15));
+    auto red = make_shared<lambertian>(color(0.65, 0.05, 0.05));
+    auto white = make_shared<lambertian>(color(0.73, 0.73, 0.73));
+    auto green = make_shared<lambertian>(color(0.12, 0.45, 0.15));
     auto light = make_shared<diffuse_light>(color(15, 15, 15));
 
     world->add(make_shared<yz_rect>(0, 555, 0, 555, 555, green));
     world->add(make_shared<yz_rect>(0, 555, 0, 555, 0, red));
     // 光源稍微隔开一点距离
-    world->add(make_shared<zx_rect>(213, 343, 227, 332, 554, light));
-    world->add(make_shared<zx_rect>(0, 555, 0, 555, 0, white));
-    world->add(make_shared<zx_rect>(0, 555, 0, 555, 555, white));
+    world->add(make_shared<xz_rect>(213, 343, 227, 332, 554, light));
+    world->add(make_shared<xz_rect>(0, 555, 0, 555, 0, white));
+    world->add(make_shared<xz_rect>(0, 555, 0, 555, 555, white));
     world->add(make_shared<xy_rect>(0, 555, 0, 555, 555, white));
 
+    // 两个小盒子
+    // world->add(make_shared<box>(
+    // point3(265, 0, 295), point3(430, 330, 460), white));
+    // world->add(make_shared<box>(
+    // point3(130, 0, 65), point3(295, 165, 230), white));
+
+    shared_ptr<hittable> box1 =
+        make_shared<box>(point3(0, 0, 0), point3(165, 330, 165), white);
+    box1 = make_shared<rotate_y>(box1, 15);
+    box1 = make_shared<translate>(box1, vec3(265, 0, 295));
+    world->add(box1);
+
+    shared_ptr<hittable> box2 =
+        make_shared<box>(point3(0, 0, 0), point3(165, 165, 165), white);
+    box2 = make_shared<rotate_y>(box2, -18);
+    box2 = make_shared<translate>(box2, vec3(130, 0, 65));
+    world->add(box2);
+    
     config->world = world;
 }

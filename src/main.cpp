@@ -77,7 +77,7 @@ int main(int argc, char** argv) {
     // simple_light(config);
     // simple_light2(config);
     cornell_box(config);
-
+    
     shared_ptr<camera> cam = config->cam;
 
     // BVH
@@ -100,8 +100,8 @@ int main(int argc, char** argv) {
     // Image
     //
 
-    const int spp = 1000;
-    const int max_depth = 10;
+    const int spp = 50;
+    const int max_depth = 50;
     const double aspect_ratio = config->aspect_ratio;
     // 图像分辨率
     const int image_width = config->image_width;

@@ -1,23 +1,23 @@
-#ifndef ZX_RECT_H
-#define ZX_RECT_H
+#ifndef XZ_RECT_H
+#define XZ_RECT_H
 
 #include "hittable.h"
 
 // xy 平面长方形
-class zx_rect : public hittable {
+class xz_rect : public hittable {
    private:
     shared_ptr<material> mat_ptr;
-    double z0, z1, x0, x1, k;  // y = k
+    double x0, x1, z0, z1, k;  // y = k
 
    public:
-    zx_rect();
-    zx_rect(double _z0,
-            double _z1,
-            double _x0,
+    xz_rect();
+    xz_rect(double _x0,
             double _x1,
+            double _z0,
+            double _z1,
             double _k,
             shared_ptr<material> mat);
-    ~zx_rect();
+    ~xz_rect();
 
     virtual bool hit(const ray& r,
                      double t_min,

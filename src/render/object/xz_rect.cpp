@@ -1,16 +1,16 @@
-#include <toyrender/object/zx_rect.h>
+#include <toyrender/object/xz_rect.h>
 
-zx_rect::zx_rect() {}
-zx_rect::zx_rect(double _z0,
-                 double _z1,
-                 double _x0,
+xz_rect::xz_rect() {}
+xz_rect::xz_rect(double _x0,
                  double _x1,
+                 double _z0,
+                 double _z1,
                  double _k,
                  shared_ptr<material> mat)
-    : z0(_z0), z1(_z1), x0(_x0), x1(_x1), k(_k), mat_ptr(mat) {}
-zx_rect::zx_rect::~zx_rect() {}
+    : x0(_x0), x1(_x1), z0(_z0), z1(_z1), k(_k), mat_ptr(mat) {}
+xz_rect::xz_rect::~xz_rect() {}
 
-bool zx_rect::hit(const ray& r,
+bool xz_rect::hit(const ray& r,
                   double t_min,
                   double t_max,
                   hit_record& rec) const {
@@ -31,9 +31,8 @@ bool zx_rect::hit(const ray& r,
     }
 
     // 击中, 保存 hit_record
-    // 注意这里的纹理坐标 (z, x)
-    rec.u = (z - z0) / (z1 - z0);
-    rec.v = (x - x0) / (x1 - x0);
+    rec.u = (x - x0) / (x1 - x0);
+    rec.v = (z - z0) / (z1 - z0);
     rec.t = t;
     vec3 outward_normal(0, 1.0, 0);
     rec.set_face_normal(r, outward_normal);
@@ -43,7 +42,7 @@ bool zx_rect::hit(const ray& r,
     return true;
 }
 
-bool zx_rect::bounding_box(double time0, double time1, aabb& output_box) const {
+bool xz_rect::bounding_box(double time0, double time1, aabb& output_box) const {
     // 在 y 方向上增加一段小的包围
     output_box = aabb(point3(x0, k - 1e-4, z0), point3(x1, k + 1e-4, z1));
     return true;
