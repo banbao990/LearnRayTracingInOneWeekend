@@ -1,6 +1,6 @@
 #include <toyrender/texture/perlin.h>
 
-#include <toyrender/util/rtweekend.hpp>
+#include <toyrender/utils/rtweekend.hpp>
 
 perlin::perlin() {
     // 生成一组 [0, 1) 随机向量

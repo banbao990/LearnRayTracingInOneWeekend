@@ -32,8 +32,8 @@
 #include "texture/perlin_noise_texture.h"
 #include "texture/solid_color.h"
 #include "texture/texture.h"
-#include "util/h_help.h"
-#include "util/rtw_stb_image.h"
-// #include "util/rtweekend.hpp"
+#include "utils/h_help.h"
+#include "utils/rtw_stb_image.h"
+// #include "utils/rtweekend.hpp"
 
 #endif

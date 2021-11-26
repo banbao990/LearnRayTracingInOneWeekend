@@ -3,7 +3,7 @@
 
 #include "../texture/solid_color.h"
 #include "../texture/texture.h"
-#include "../util/h_help.h"
+#include "..//utils/h_help.h"
 #include "material.h"
 
 class diffuse_light : public material {

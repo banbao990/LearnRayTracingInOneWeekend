@@ -1,6 +1,6 @@
 #ifndef TRANSLATE_H
 #define TRANSLATE_H
-#include "../util/h_help.h"
+#include "..//utils/h_help.h"
 #include "hittable.h"
 
 class translate : public hittable {

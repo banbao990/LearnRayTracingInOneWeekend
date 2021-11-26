@@ -2,7 +2,7 @@
 #include <toyrender/scene_models/scene_model.h>
 #include <toyrender/texture/image_texture.h>
 
-#include <toyrender/util/rtweekend.hpp>
+#include <toyrender/utils/rtweekend.hpp>
 
 // 中间一个蓝色的小球, 左边是要给两层的玻璃球, 右边一个磨砂金属球
 void basis_scene1(shared_ptr<scene_config>& config) {

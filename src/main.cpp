@@ -7,7 +7,7 @@
 #include <iomanip>
 #include <iostream>
 #include <memory>
-#include <toyrender/util/rtweekend.hpp>
+#include <toyrender/utils/rtweekend.hpp>
 
 hittable_list random_scene();
 
@@ -26,8 +26,7 @@ string get_file_name();
 // ray 没有归一化
 color ray_color_background(const ray& r,
                            const shared_ptr<scene_config>& config);
-color ray_color_world(const ray& r,
-                      const shared_ptr<scene_config>& config,
+color ray_color_world(const ray& r, const shared_ptr<scene_config>& config,
                       int depth);
 
 // 输出一张 perlin 噪声图
@@ -59,7 +58,10 @@ int main(int argc, char** argv) {
     }
 
     // 重定向输出
-    freopen(file_name.c_str(), "w", stdout);
+    auto fret = freopen(file_name.c_str(), "w", stdout);
+    if (fret == NULL) {
+        std::cerr << "redirect the std::cout failed!\n" << std::flush;
+    }
 
     //
     // World & Camera
@@ -77,7 +79,7 @@ int main(int argc, char** argv) {
     // simple_light(config);
     // simple_light2(config);
     cornell_box(config);
-    
+
     shared_ptr<camera> cam = config->cam;
 
     // BVH
@@ -174,8 +176,7 @@ color ray_color_background(const ray& r,
     return config->background_color;
 }
 
-color ray_color_world(const ray& r,
-                      const shared_ptr<scene_config>& config,
+color ray_color_world(const ray& r, const shared_ptr<scene_config>& config,
                       int depth) {
     // 限制深度, 避免无止境递归下去
     if (depth <= 0) {

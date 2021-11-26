@@ -1,7 +1,7 @@
 #ifndef ROTATE_Y_H
 #define ROTATE_Y_H
 
-#include "../util/h_help.h"
+#include "..//utils/h_help.h"
 #include "hittable.h"
 #include "hittable_list.h"
 

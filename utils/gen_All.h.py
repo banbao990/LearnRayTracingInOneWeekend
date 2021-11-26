@@ -14,7 +14,7 @@ lib = list()
 get_include_files("../include/toyrender/", "", lib)
 lib.sort()
 
-remove_list = [ "All.h", "util/rtweekend.hpp"]
+remove_list = [ "All.h", "utils/rtweekend.hpp"]
 filename = "../include/toyrender/All.h" 
 
 with open(filename, "w") as f:
@@ -22,5 +22,5 @@ with open(filename, "w") as f:
     for ele in lib:
         if(ele not in remove_list):
             f.write("#include \"" + ele + "\"\n")
-    f.write("// #include \"util/rtweekend.hpp\"\n")
+    f.write("// #include \"utils/rtweekend.hpp\"\n")
     f.write("\n#endif")

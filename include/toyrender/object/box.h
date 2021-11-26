@@ -2,7 +2,7 @@
 #define BOX_H
 
 #include "../common/vec3.h"
-#include "../util/h_help.h"
+#include "..//utils/h_help.h"
 #include "hittable.h"
 #include "hittable_list.h"
 #include "xy_rect.h"

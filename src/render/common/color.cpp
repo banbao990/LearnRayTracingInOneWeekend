@@ -1,6 +1,6 @@
 #include <toyrender/common/color.h>
 
-#include <toyrender/util/rtweekend.hpp>
+#include <toyrender/utils/rtweekend.hpp>
 
 void write_color(std::ostream& out, color pixel_color, int spp) {
     // 除以样本数
