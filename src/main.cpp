@@ -7,7 +7,7 @@
 #include <iomanip>
 #include <iostream>
 #include <memory>
-#include <toyrender/utils/rtweekend.hpp>
+#include <toyrender/utils/rtweekend.h>
 
 hittable_list random_scene();
 
@@ -102,7 +102,7 @@ int main(int argc, char** argv) {
     // Image
     //
 
-    const int spp = 50;
+    const int spp = 25;
     const int max_depth = 50;
     const double aspect_ratio = config->aspect_ratio;
     // 图像分辨率

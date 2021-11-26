@@ -1,6 +1,6 @@
 #include <toyrender/object/rotate_y.h>
 
-#include <toyrender/utils/rtweekend.hpp>
+#include <toyrender/utils/rtweekend.h>
 
 rotate_y::rotate_y() {}
 rotate_y::rotate_y(shared_ptr<hittable> _ptr, double angle) : ptr(_ptr) {

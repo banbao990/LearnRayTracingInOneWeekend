@@ -1,6 +1,6 @@
 #include <toyrender/material/dielectric.h>
 
-#include <toyrender/utils/rtweekend.hpp>
+#include <toyrender/utils/rtweekend.h>
 
 dielectric::dielectric() : ir(1.0) {}
 dielectric::dielectric(double _ir) : ir(_ir) {}

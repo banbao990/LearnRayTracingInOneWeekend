@@ -1,7 +1,7 @@
 #include <external/stb_image.h>
 #include <toyrender/texture/image_texture.h>
 
-#include <toyrender/utils/rtweekend.hpp>
+#include <toyrender/utils/rtweekend.h>
 
 image_texture::image_texture()
     : data(nullptr), width(0), height(0), bytes_per_scanline(0) {}

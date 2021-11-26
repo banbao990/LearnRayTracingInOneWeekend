@@ -34,6 +34,6 @@
 #include "texture/texture.h"
 #include "utils/h_help.h"
 #include "utils/rtw_stb_image.h"
-// #include "utils/rtweekend.hpp"
+// #include "utils/rtweekend.h"
 
 #endif

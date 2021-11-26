@@ -2,7 +2,7 @@
 #include <toyrender/object/bvh_node.h>
 
 #include <algorithm>
-#include <toyrender/utils/rtweekend.hpp>
+#include <toyrender/utils/rtweekend.h>
 
 bvh_node::bvh_node() {}
 

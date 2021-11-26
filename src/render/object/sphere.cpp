@@ -1,7 +1,7 @@
 #include <toyrender/object/sphere.h>
 
 #include <cmath>
-#include <toyrender/utils/rtweekend.hpp>
+#include <toyrender/utils/rtweekend.h>
 
 sphere::sphere() {}
 sphere::sphere(double _radius) : radius(_radius) {}
