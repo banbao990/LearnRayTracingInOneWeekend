@@ -1,7 +1,5 @@
 #include <toyrender/All.h>
-#include <toyrender/scene_models/scene_model.h>
 #include <toyrender/texture/image_texture.h>
-
 #include <toyrender/utils/rtweekend.h>
 
 // 中间一个蓝色的小球, 左边是要给两层的玻璃球, 右边一个磨砂金属球
@@ -271,6 +269,7 @@ void simple_light2(shared_ptr<scene_config>& config) {
     config->world = world;
 }
 
+// Cornell Box
 void cornell_box(shared_ptr<scene_config>& config) {
     // Background Color
     // Camera
@@ -287,6 +286,7 @@ void cornell_box(shared_ptr<scene_config>& config) {
         make_shared<camera>(vfov, config->aspect_ratio, lookfrom, lookat, vup,
                             aperture, dist_to_focus, t_min, t_max);
 
+    config->image_width = 400;
     // World
     config->world = make_shared<hittable_list>();
     shared_ptr<hittable_list> world = make_shared<hittable_list>();
@@ -321,6 +321,55 @@ void cornell_box(shared_ptr<scene_config>& config) {
     box2 = make_shared<rotate_y>(box2, -18);
     box2 = make_shared<translate>(box2, vec3(130, 0, 65));
     world->add(box2);
-    
+
+    config->world = world;
+}
+
+// Cornell Box 加上参与介质的效果(烟雾)
+void cornell_box_smoke(shared_ptr<scene_config>& config) {
+    // Background Color
+    // Camera
+    config->aspect_ratio = 1.0;
+    double vfov = 40.0;
+    auto aperture = 0.0;  // 没有模糊
+    point3 lookfrom(278, 278, -800);
+    point3 lookat = point3(278, 278, 0);
+    vec3 vup(0, 1, 0);
+    auto dist_to_focus = 10.0;
+    double t_min = 0.0, t_max = 1.0;
+
+    config->cam =
+        make_shared<camera>(vfov, config->aspect_ratio, lookfrom, lookat, vup,
+                            aperture, dist_to_focus, t_min, t_max);
+
+    // World
+    config->world = make_shared<hittable_list>();
+    shared_ptr<hittable_list> world = make_shared<hittable_list>();
+
+    auto red = make_shared<lambertian>(color(.65, .05, .05));
+    auto white = make_shared<lambertian>(color(.73, .73, .73));
+    auto green = make_shared<lambertian>(color(.12, .45, .15));
+    auto light = make_shared<diffuse_light>(color(7, 7, 7));
+
+    world->add(make_shared<yz_rect>(0, 555, 0, 555, 555, green));
+    world->add(make_shared<yz_rect>(0, 555, 0, 555, 0, red));
+    world->add(make_shared<xz_rect>(113, 443, 127, 432, 554, light));
+    world->add(make_shared<xz_rect>(0, 555, 0, 555, 555, white));
+    world->add(make_shared<xz_rect>(0, 555, 0, 555, 0, white));
+    world->add(make_shared<xy_rect>(0, 555, 0, 555, 555, white));
+
+    shared_ptr<hittable> box1 =
+        make_shared<box>(point3(0, 0, 0), point3(165, 330, 165), white);
+    box1 = make_shared<rotate_y>(box1, 15);
+    box1 = make_shared<translate>(box1, vec3(265, 0, 295));
+
+    shared_ptr<hittable> box2 =
+        make_shared<box>(point3(0, 0, 0), point3(165, 165, 165), white);
+    box2 = make_shared<rotate_y>(box2, -18);
+    box2 = make_shared<translate>(box2, vec3(130, 0, 65));
+
+    world->add(make_shared<constant_medium>(box1, 0.01, color(0, 0, 0)));
+    world->add(make_shared<constant_medium>(box2, 0.01, color(1, 1, 1)));
+
     config->world = world;
 }

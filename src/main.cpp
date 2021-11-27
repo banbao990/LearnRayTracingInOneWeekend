@@ -60,7 +60,7 @@ int main(int argc, char** argv) {
     // 重定向输出
     auto fret = freopen(file_name.c_str(), "w", stdout);
     if (fret == NULL) {
-        std::cerr << "redirect the std::cout failed!\n" << std::flush;
+        std::cerr << "redirect the " << file_name << " failed!\n" << std::flush;
     }
 
     //
@@ -78,7 +78,8 @@ int main(int argc, char** argv) {
     // earth(config);
     // simple_light(config);
     // simple_light2(config);
-    cornell_box(config);
+    // cornell_box(config);
+    cornell_box_smoke(config);
 
     shared_ptr<camera> cam = config->cam;
 
@@ -128,8 +129,7 @@ int main(int argc, char** argv) {
               << "|\nNow Progress:\n|" << std::flush;
 
 #pragma omp parallel for schedule(dynamic)
-    for (int i = image_height - 1; i >= 0; --i) {
-        std::cerr << "<" << std::flush;
+    for (int i = 0; i < image_height; ++i) {
         for (int j = 0; j < image_width; ++j) {
             color pixel_color(0, 0, 0);
             for (int s = 0; s < spp; ++s) {
@@ -141,6 +141,7 @@ int main(int argc, char** argv) {
             }
             image_to_render[i][j] = pixel_color;
         }
+        std::cerr << "<" << std::flush;
     }
     t2 = get_second();
     std::cerr << "|\nRedering Done!\n    Rendering Cost: " << (t2 - t1)

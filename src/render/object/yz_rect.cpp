@@ -1,18 +1,13 @@
 #include <toyrender/object/yz_rect.h>
+#include <toyrender/utils/h_help.h>
 
 yz_rect::yz_rect() {}
-yz_rect::yz_rect(double _y0,
-                 double _y1,
-                 double _z0,
-                 double _z1,
-                 double _k,
+yz_rect::yz_rect(double _y0, double _y1, double _z0, double _z1, double _k,
                  shared_ptr<material> mat)
     : y0(_y0), y1(_y1), z0(_z0), z1(_z1), k(_k), mat_ptr(mat) {}
 yz_rect::yz_rect::~yz_rect() {}
 
-bool yz_rect::hit(const ray& r,
-                  double t_min,
-                  double t_max,
+bool yz_rect::hit(const ray& r, double t_min, double t_max,
                   hit_record& rec) const {
     // 求出和 x=k 平面的交点
     // 可能是 inf
@@ -44,6 +39,6 @@ bool yz_rect::hit(const ray& r,
 
 bool yz_rect::bounding_box(double time0, double time1, aabb& output_box) const {
     // 在 x 方向上增加一段小的包围
-    output_box = aabb(point3(k - 1e-4, y0, z0), point3(k + 1e-4, y1, z1));
+    output_box = aabb(point3(k - eps, y0, z0), point3(k + eps, y1, z1));
     return true;
 }
