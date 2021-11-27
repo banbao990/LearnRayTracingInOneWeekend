@@ -2,12 +2,12 @@
 #include <sys/stat.h>
 #include <time.h>
 #include <toyrender/All.h>
+#include <toyrender/utils/rtweekend.h>
 #include <unistd.h>
 
 #include <iomanip>
 #include <iostream>
 #include <memory>
-#include <toyrender/utils/rtweekend.h>
 
 hittable_list random_scene();
 

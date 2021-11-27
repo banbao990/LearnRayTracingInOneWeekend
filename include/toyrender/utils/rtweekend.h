@@ -1,10 +1,13 @@
 #ifndef RTWEEKEND_H
 #define RTWEEKEND_H
 
+#include <omp.h>
+
 #include <cmath>
 #include <limits>
 #include <memory>
 #include <random>
+
 #include "h_help.h"
 
 // !!!important!!!
@@ -19,8 +22,9 @@ inline double degrees_to_radians(double degrees) {
 
 // 返回一个随机数 [0, 1)
 inline double random_double() {
-    static std::uniform_real_distribution<double> distribution(0.0, 1.0);
-    static std::mt19937 generator;
+    static thread_local std::uniform_real_distribution<double> distribution(
+        0.0, 1.0);
+    static thread_local std::mt19937 generator(omp_get_thread_num());
     return distribution(generator);
     // return rand() / (RAND_MAX + 1.0);
 }
