@@ -79,7 +79,8 @@ int main(int argc, char** argv) {
     // simple_light(config);
     // simple_light2(config);
     // cornell_box(config);
-    cornell_box_smoke(config);
+    // cornell_box_smoke(config);
+    rtnw_final_scene(config);
 
     shared_ptr<camera> cam = config->cam;
 
@@ -102,9 +103,10 @@ int main(int argc, char** argv) {
     //
     // Image
     //
-
-    const int spp = 25;
-    const int max_depth = 50;
+    
+    // rtnw_final_scene, 51s
+    const int spp = 10;
+    const int max_depth = 10;
     const double aspect_ratio = config->aspect_ratio;
     // 图像分辨率
     const int image_width = config->image_width;

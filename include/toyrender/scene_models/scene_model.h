@@ -25,5 +25,6 @@ void simple_light(shared_ptr<scene_config>& config);
 void simple_light2(shared_ptr<scene_config>& config);
 void cornell_box(shared_ptr<scene_config>& config);
 void cornell_box_smoke(shared_ptr<scene_config>& config);
+void rtnw_final_scene(shared_ptr<scene_config>& config);
 
 #endif
