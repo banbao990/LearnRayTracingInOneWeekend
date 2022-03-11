@@ -103,9 +103,12 @@ int main(int argc, char** argv) {
     //
     // Image
     //
-    
-    // rtnw_final_scene, 51s
-    const int spp = 10;
+
+    // rtnw_final_scene, 10 spp, 51s
+    // rtnw_final_scene, 1 spp
+    //    openmp: 5
+    //    single: 73
+    const int spp = 1;
     const int max_depth = 10;
     const double aspect_ratio = config->aspect_ratio;
     // 图像分辨率
