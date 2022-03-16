@@ -5,7 +5,7 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3")
 set(CMAKE_C_FLAGS "${CMAKE_CXX_FLAGS} -O3")
 
 # Debug
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g")
+# set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g")
 
 # openmp
 FIND_PACKAGE(OpenMP REQUIRED)
@@ -31,7 +31,7 @@ add_executable(MAIN src/main.cpp)
 target_link_libraries(MAIN render)
 
 # 在发布的时候删除这两行, cmake 插件不加这两行 test.cpp 在 vscode 中找不到路径
-add_executable(TEST src/test.cpp)
+add_executable(TEST test/estimate_x_x.cpp)
 target_link_libraries(TEST render)
 
 # 拷贝资源文件
