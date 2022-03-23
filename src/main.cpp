@@ -26,7 +26,8 @@ string get_file_name();
 // ray 没有归一化
 color ray_color_background(const ray& r,
                            const shared_ptr<scene_config>& config);
-color ray_color_world(const ray& r, const shared_ptr<scene_config>& config,
+color ray_color_world(const ray& r,
+                      const shared_ptr<scene_config>& config,
                       int depth);
 
 // 输出一张 perlin 噪声图
@@ -42,7 +43,6 @@ void write_out_the_whole_noise() {
 }
 
 int main(int argc, char** argv) {
-    // std::cout << a << std::endl;
     // return 0;
 
     // 参数
@@ -69,7 +69,7 @@ int main(int argc, char** argv) {
 
     shared_ptr<scene_config> config = make_shared<scene_config>();
     config->aspect_ratio = 16.0 / 9.0;
-    config->image_width = 400;
+    config->image_width = 600;
 
     // basis_scene1(config);
     // random_scene1(config);
@@ -78,9 +78,9 @@ int main(int argc, char** argv) {
     // earth(config);
     // simple_light(config);
     // simple_light2(config);
-    // cornell_box(config);
+    cornell_box(config);
     // cornell_box_smoke(config);
-    rtnw_final_scene(config);
+    // rtnw_final_scene(config);
 
     shared_ptr<camera> cam = config->cam;
 
@@ -108,7 +108,7 @@ int main(int argc, char** argv) {
     // rtnw_final_scene, 1 spp
     //    openmp: 5
     //    single: 73
-    const int spp = 1;
+    const int spp = 1000;
     const int max_depth = 10;
     const double aspect_ratio = config->aspect_ratio;
     // 图像分辨率
@@ -182,7 +182,8 @@ color ray_color_background(const ray& r,
     return config->background_color;
 }
 
-color ray_color_world(const ray& r, const shared_ptr<scene_config>& config,
+color ray_color_world(const ray& r,
+                      const shared_ptr<scene_config>& config,
                       int depth) {
     // 限制深度, 避免无止境递归下去
     if (depth <= 0) {
@@ -207,16 +208,18 @@ color ray_color_world(const ray& r, const shared_ptr<scene_config>& config,
     ray scattered_ray;
     color attenuation;
     color emitted;
+    double pdf;
 
     emitted = rec.mat_ptr->emitted(rec.u, rec.v, rec.p);
     // 暂时的材质实现, 光源和非光源是完全分开的(光源不散射)
     // 光源(不进行散射的光源)
-    if (!rec.mat_ptr->scatter(r, rec, attenuation, scattered_ray)) {
+    if (!rec.mat_ptr->scatter(r, rec, attenuation, scattered_ray, pdf)) {
         return emitted;
     }
     // 非光源(可能发光)
     return emitted +
-           attenuation * ray_color_world(scattered_ray, config, depth - 1);
+           attenuation * rec.mat_ptr->scattering_pdf(r, rec, scattered_ray) *
+               ray_color_world(scattered_ray, config, depth - 1) / pdf;
 }
 
 string get_file_name() {

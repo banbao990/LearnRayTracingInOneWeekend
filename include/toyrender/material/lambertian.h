@@ -16,8 +16,20 @@ class lambertian : public material {
     lambertian(shared_ptr<texture> _albebo);
     ~lambertian();
 
-    virtual bool scatter(const ray& r_in, const hit_record& rec,
-                         color& attenuation, ray& scattered) const override;
+    virtual bool scatter(const ray& r_in,
+                         const hit_record& rec,
+                         color& attenuation,
+                         ray& scattered) const override;
+
+    virtual bool scatter(const ray& r_in,
+                         const hit_record& rec,
+                         color& attenuation,
+                         ray& scattered,
+                         double& pdf) const override;
+
+    virtual double scattering_pdf(const ray& r_in,
+                                  const hit_record& rec,
+                                  ray& scattered) const override;
 };
 
 #endif
