@@ -1,7 +1,7 @@
 #include <toyrender/common/vec3.h>
+#include <toyrender/utils/rtweekend.h>
 
 #include <cmath>
-#include <toyrender/utils/rtweekend.h>
 
 // 构造函数
 vec3::vec3() : e{0, 0, 0} {}
@@ -154,6 +154,18 @@ vec3 vec3::random_in_unit_disk() {
             return p;
         }
     }
+}
+
+vec3 vec3::random_cosine_direction() {
+    double r1 = random_double();
+    double r2 = random_double();
+    double z = sqrt(1 - r2);
+
+    double phi = pi2 * r1;
+    double x = cos(phi) * sqrt(r2);
+    double y = sin(phi) * sqrt(r2);
+
+    return vec3(x, y, z);
 }
 
 vec3 vec3::reflect(const vec3& ray_in, const vec3& normal) {

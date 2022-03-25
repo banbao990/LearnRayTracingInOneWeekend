@@ -3,6 +3,7 @@
 
 #include "common/camera.h"
 #include "common/color.h"
+#include "common/onb.h"
 #include "common/ray.h"
 #include "common/vec3.h"
 #include "material/dielectric.h"
