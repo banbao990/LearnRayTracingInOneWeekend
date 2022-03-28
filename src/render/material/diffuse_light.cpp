@@ -16,3 +16,15 @@ bool diffuse_light::scatter(const ray& r_in,
 color diffuse_light::emitted(double u, double v, const point3& p) const {
     return emit->value(u, v, p);
 }
+
+color diffuse_light::emitted(const ray& ray_in,
+                             const hit_record& rec,
+                             double u,
+                             double v,
+                             const point3& p) const {
+    if (rec.front_face) {
+        return emit->value(u, v, p);
+    } else {
+        return color(0, 0, 0);
+    }
+}

@@ -17,6 +17,7 @@
 #include "object/box_compare.h"
 #include "object/bvh_node.h"
 #include "object/constant_medium.h"
+#include "object/flip_face.h"
 #include "object/hit_record.h"
 #include "object/hittable.h"
 #include "object/hittable_list.h"

@@ -1,5 +1,5 @@
-#ifndef constant_medium_H
-#define constant_medium_H
+#ifndef CONSTANT_MEDIUM_H
+#define CONSTANT_MEDIUM_H
 
 #include "../material/isotropic.h"
 #include "../texture/texture.h"

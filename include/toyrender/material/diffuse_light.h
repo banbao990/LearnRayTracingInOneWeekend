@@ -1,9 +1,9 @@
 #ifndef DIFFUSE_LIGHT_H
 #define DIFFUSE_LIGHT_H
 
+#include "..//utils/h_help.h"
 #include "../texture/solid_color.h"
 #include "../texture/texture.h"
-#include "..//utils/h_help.h"
 #include "material.h"
 
 class diffuse_light : public material {
@@ -26,6 +26,11 @@ class diffuse_light : public material {
     // 发光根据纹理坐标 (u,v) 以及点的位置 p 返回发光的颜色
     // 某些纹理的颜色和位置 p 有关(例如之前实现的 perlin_texture)
     virtual color emitted(double u, double v, const point3& p) const override;
+    virtual color emitted(const ray& ray_in,
+                          const hit_record& rec,
+                          double u,
+                          double v,
+                          const point3& p) const override;
 };
 
 #endif

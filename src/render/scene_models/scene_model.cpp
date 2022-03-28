@@ -299,7 +299,9 @@ void cornell_box(shared_ptr<scene_config>& config) {
     world->add(make_shared<yz_rect>(0, 555, 0, 555, 555, green));
     world->add(make_shared<yz_rect>(0, 555, 0, 555, 0, red));
     // 光源稍微隔开一点距离
-    world->add(make_shared<xz_rect>(213, 343, 227, 332, 554, light));
+    // world->add(make_shared<xz_rect>(213, 343, 227, 332, 554, light));
+    world->add(make_shared<flip_face>(
+        make_shared<xz_rect>(213, 343, 227, 332, 554, light)));
     world->add(make_shared<xz_rect>(0, 555, 0, 555, 0, white));
     world->add(make_shared<xz_rect>(0, 555, 0, 555, 555, white));
     world->add(make_shared<xy_rect>(0, 555, 0, 555, 555, white));
