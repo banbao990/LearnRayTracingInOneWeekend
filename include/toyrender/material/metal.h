@@ -15,8 +15,14 @@ class metal : public material {
     metal(color _albedo, double _fuzz = 0);
     ~metal();
 
-    virtual bool scatter(const ray& r_in, const hit_record& rec,
-                         color& attenuation, ray& scattered) const override;
+    virtual bool scatter(const ray& r_in,
+                         const hit_record& rec,
+                         color& attenuation,
+                         ray& scattered) const override;
+
+    virtual bool scatter(const ray& r_in,
+                         const hit_record& rec,
+                         scatter_record& srec) const override;
 };
 
 #endif

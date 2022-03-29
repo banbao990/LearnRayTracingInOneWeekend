@@ -13,6 +13,7 @@ class material {
    public:
     // 给定一条入射光线, 返回一条出射光线(BRDF), 设置 attenuation
     // 如果是是不散射的材质(例如只发光而不散射的材质), 则返回 false
+    // TODO 这个函数本质上已经被废弃, 没有实现 pdf 的材质将无法正常使用
     virtual bool scatter(const ray& r_in,
                          const hit_record& rec,
                          color& attenuation,
@@ -21,7 +22,7 @@ class material {
 
     // 以下为 pdf 的形式
     // TODO 因为现在并不是所有材质都实现了这个函数, 因此我们不将其定义为纯虚函数
-    // Lambertian 实现了
+    // 实现: Lambertian, metal, dieletric
     virtual bool scatter(const ray& r_in,
                          const hit_record& rec,
                          scatter_record& srec) const {

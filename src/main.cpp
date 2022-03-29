@@ -78,7 +78,8 @@ int main(int argc, char** argv) {
     // earth(config);
     // simple_light(config);
     // simple_light2(config);
-    cornell_box(config);
+    // cornell_box(config);
+    cornell_box_specular(config);
     // cornell_box_smoke(config);
     // rtnw_final_scene(config);
 
@@ -217,22 +218,22 @@ color ray_color_world(const ray& r,
         return emitted;
     }
 
-// #define B_SAMPLE_THE_LIGHT_DIRECTLY
-#ifdef B_SAMPLE_THE_LIGHT_DIRECTLY
-    hittable_pdf light_pdf(config->light, rec.p);
-    scattered_ray = ray(rec.p, light_pdf.generate(), r.get_time());
-    pdf_val = light_pdf.value(scattered_ray.get_direction());
-#else
+    // specular 材质特判
+    if (srec.is_specular) {
+        return srec.attenuation *
+               ray_color_world(srec.specular_ray, config, depth - 1);
+    }
+
     auto p1 = make_shared<hittable_pdf>(config->light, rec.p);
     mixture_pdf pdf(p1, srec.pdf_ptr);
     scattered_ray = ray(rec.p, pdf.generate(), r.get_time());
     pdf_val = pdf.value(scattered_ray.get_direction());
-#endif
 
     // 非光源(可能发光)
-    return emitted +
-           srec.attenuation * rec.mat_ptr->scattering_pdf(r, rec, scattered_ray) *
-               ray_color_world(scattered_ray, config, depth - 1) / pdf_val;
+    return emitted + srec.attenuation *
+                         rec.mat_ptr->scattering_pdf(r, rec, scattered_ray) *
+                         ray_color_world(scattered_ray, config, depth - 1) /
+                         pdf_val;
 }
 
 string get_file_name() {

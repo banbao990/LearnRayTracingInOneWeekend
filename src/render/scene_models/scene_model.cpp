@@ -328,6 +328,70 @@ void cornell_box(shared_ptr<scene_config>& config) {
     config->world = world;
 }
 
+// Cornell Box (加了镜面)
+void cornell_box_specular(shared_ptr<scene_config>& config) {
+    // Background Color
+    // Camera
+    config->aspect_ratio = 1.0;
+    double vfov = 40.0;
+    auto aperture = 0.0;  // 没有模糊
+    point3 lookfrom(278, 278, -800);
+    point3 lookat = point3(278, 278, 0);
+    vec3 vup(0, 1, 0);
+    auto dist_to_focus = 10.0;
+    double t_min = 0.0, t_max = 1.0;
+
+    config->cam =
+        make_shared<camera>(vfov, config->aspect_ratio, lookfrom, lookat, vup,
+                            aperture, dist_to_focus, t_min, t_max);
+
+    config->image_width = 400;
+    // World
+    config->world = make_shared<hittable_list>();
+    shared_ptr<hittable_list> world = make_shared<hittable_list>();
+
+    auto red = make_shared<lambertian>(color(0.65, 0.05, 0.05));
+    auto white = make_shared<lambertian>(color(0.73, 0.73, 0.73));
+    auto green = make_shared<lambertian>(color(0.12, 0.45, 0.15));
+    auto light = make_shared<diffuse_light>(color(15, 15, 15));
+
+    world->add(make_shared<yz_rect>(0, 555, 0, 555, 555, green));
+    world->add(make_shared<yz_rect>(0, 555, 0, 555, 0, red));
+    // 光源稍微隔开一点距离
+    config->light = make_shared<flip_face>(
+        make_shared<xz_rect>(213, 343, 227, 332, 554, light));
+    world->add(config->light);
+    world->add(make_shared<xz_rect>(0, 555, 0, 555, 0, white));
+    world->add(make_shared<xz_rect>(0, 555, 0, 555, 555, white));
+    world->add(make_shared<xy_rect>(0, 555, 0, 555, 555, white));
+
+    // 两个小盒子
+    // world->add(make_shared<box>(
+    // point3(265, 0, 295), point3(430, 330, 460), white));
+    // world->add(make_shared<box>(
+    // point3(130, 0, 65), point3(295, 165, 230), white));
+
+    // 铝
+    auto aluminum = make_shared<metal>(color(0.8, 0.85, 0.88));
+
+    shared_ptr<hittable> box1 =
+        make_shared<box>(point3(0, 0, 0), point3(165, 330, 165), aluminum);
+    box1 = make_shared<rotate_y>(box1, 15);
+    box1 = make_shared<translate>(box1, vec3(265, 0, 295));
+    world->add(box1);
+
+    shared_ptr<hittable> box2 =
+        make_shared<box>(point3(0, 0, 0), point3(165, 165, 165), white);
+    box2 = make_shared<rotate_y>(box2, -18);
+    box2 = make_shared<translate>(box2, vec3(130, 0, 65));
+    world->add(box2);
+
+    // auto glass = make_shared<dielectric>(1.5);
+    // world->add(make_shared<sphere>(point3(190, 90, 190), 90, glass));
+
+    config->world = world;
+}
+
 // Cornell Box 加上参与介质的效果(烟雾)
 void cornell_box_smoke(shared_ptr<scene_config>& config) {
     // Background Color
