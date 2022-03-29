@@ -17,3 +17,12 @@ bool flip_face::bounding_box(double time0,
                              aabb& output_box) const {
     return ptr->bounding_box(time0, time1, output_box);
 }
+
+
+vec3 flip_face::random(const vec3& origin) const {
+    return ptr->random(origin);
+}
+
+double flip_face::pdf_value(const point3& origin, const vec3& direction) const {
+    return ptr->pdf_value(origin, direction);
+}

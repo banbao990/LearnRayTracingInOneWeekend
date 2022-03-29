@@ -108,7 +108,7 @@ int main(int argc, char** argv) {
     // rtnw_final_scene, 1 spp
     //    openmp: 5
     //    single: 73
-    const int spp = 10;
+    const int spp = 1000;
     const int max_depth = 10;
     const double aspect_ratio = config->aspect_ratio;
     // 图像分辨率
@@ -206,50 +206,35 @@ color ray_color_world(const ray& r,
 
     // (2) 根据材质返回光线
     ray scattered_ray;
-    color attenuation;
+    color albedo;
     color emitted;
-    double pdf;
+    double pdf_val;
 
     emitted = rec.mat_ptr->emitted(r, rec, rec.u, rec.v, rec.p);
     // 暂时的材质实现, 光源和非光源是完全分开的(光源不散射)
     // 光源(不进行散射的光源)
-    if (!rec.mat_ptr->scatter(r, rec, attenuation, scattered_ray, pdf)) {
+    if (!rec.mat_ptr->scatter(r, rec, albedo, scattered_ray, pdf_val)) {
         return emitted;
     }
 
-#define B_SAMPLE_THE_LIGHT_DIRECTLY
+// #define B_SAMPLE_THE_LIGHT_DIRECTLY
+// #define B_MIXTURE_PDF
 #ifdef B_SAMPLE_THE_LIGHT_DIRECTLY
-    // TODO 当前并不是一种泛化性的描述, 只是适合于 cornell_box
-    // 因为没有单独写 light 类
-    // make_shared<xz_rect>(213, 343, 227, 332, 554, light)
-    point3 on_light =
-        point3(random_double(213, 343), 554, random_double(227, 332));
-    vec3 to_light = on_light - rec.p;
-    double distance_squared = to_light.length_squared();
-    to_light = to_light.unit_vector();
-
-    // 方向采样不到光源
-    if (to_light.dot(rec.normal) < 0) {
-        return emitted;
-    }
-
-    double light_area = (343 - 213) * (332 - 227);
-    // 因为 cornell_box 场景中光源是水平的
-    double light_cosine = fabs(to_light.y());
-
-    // 角度太大, 相当于是光线掠过光源表面
-    if (light_cosine < 0.000001) {
-        return emitted;
-    }
-
-    pdf = distance_squared / (light_cosine * light_area);
-    scattered_ray = ray(rec.p, to_light, r.get_time());
+    hittable_pdf light_pdf(config->light, rec.p);
+    scattered_ray = ray(rec.p, light_pdf.generate(), r.get_time());
+    pdf_val = light_pdf.value(scattered_ray.get_direction());
+#elif defined(B_MIXTURE_PDF)
+    auto p1 = make_shared<hittable_pdf>(config->light, rec.p);
+    auto p2 = make_shared<cosine_pdf>(rec.normal);
+    mixture_pdf pdf(p1, p2);
+    scattered_ray = ray(rec.p, pdf.generate(), r.get_time());
+    pdf_val = pdf.value(scattered_ray.get_direction());
 #endif
 
     // 非光源(可能发光)
     return emitted +
-           attenuation * rec.mat_ptr->scattering_pdf(r, rec, scattered_ray) *
-               ray_color_world(scattered_ray, config, depth - 1) / pdf;
+           albedo * rec.mat_ptr->scattering_pdf(r, rec, scattered_ray) *
+               ray_color_world(scattered_ray, config, depth - 1) / pdf_val;
 }
 
 string get_file_name() {

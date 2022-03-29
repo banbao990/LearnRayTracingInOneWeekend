@@ -16,6 +16,7 @@ class scene_config {
     shared_ptr<camera> cam;
     shared_ptr<hittable_list> world;  // 整个场景
     color background_color;           // 默认背景色为全黑
+    shared_ptr<hittable> light = nullptr;  // 光源, 用于采样(暂时只是单个光源)
 
    public:
     scene_config();
