@@ -23,9 +23,7 @@ class lambertian : public material {
 
     virtual bool scatter(const ray& r_in,
                          const hit_record& rec,
-                         color& attenuation,
-                         ray& scattered,
-                         double& pdf) const override;
+                         scatter_record& srec) const override;
 
     virtual double scattering_pdf(const ray& r_in,
                                   const hit_record& rec,

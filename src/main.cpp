@@ -108,7 +108,7 @@ int main(int argc, char** argv) {
     // rtnw_final_scene, 1 spp
     //    openmp: 5
     //    single: 73
-    const int spp = 1000;
+    const int spp = 100;
     const int max_depth = 10;
     const double aspect_ratio = config->aspect_ratio;
     // 图像分辨率
@@ -206,34 +206,32 @@ color ray_color_world(const ray& r,
 
     // (2) 根据材质返回光线
     ray scattered_ray;
-    color albedo;
     color emitted;
     double pdf_val;
+    scatter_record srec;
 
     emitted = rec.mat_ptr->emitted(r, rec, rec.u, rec.v, rec.p);
     // 暂时的材质实现, 光源和非光源是完全分开的(光源不散射)
     // 光源(不进行散射的光源)
-    if (!rec.mat_ptr->scatter(r, rec, albedo, scattered_ray, pdf_val)) {
+    if (!rec.mat_ptr->scatter(r, rec, srec)) {
         return emitted;
     }
 
 // #define B_SAMPLE_THE_LIGHT_DIRECTLY
-// #define B_MIXTURE_PDF
 #ifdef B_SAMPLE_THE_LIGHT_DIRECTLY
     hittable_pdf light_pdf(config->light, rec.p);
     scattered_ray = ray(rec.p, light_pdf.generate(), r.get_time());
     pdf_val = light_pdf.value(scattered_ray.get_direction());
-#elif defined(B_MIXTURE_PDF)
+#else
     auto p1 = make_shared<hittable_pdf>(config->light, rec.p);
-    auto p2 = make_shared<cosine_pdf>(rec.normal);
-    mixture_pdf pdf(p1, p2);
+    mixture_pdf pdf(p1, srec.pdf_ptr);
     scattered_ray = ray(rec.p, pdf.generate(), r.get_time());
     pdf_val = pdf.value(scattered_ray.get_direction());
 #endif
 
     // 非光源(可能发光)
     return emitted +
-           albedo * rec.mat_ptr->scattering_pdf(r, rec, scattered_ray) *
+           srec.attenuation * rec.mat_ptr->scattering_pdf(r, rec, scattered_ray) *
                ray_color_world(scattered_ray, config, depth - 1) / pdf_val;
 }
 

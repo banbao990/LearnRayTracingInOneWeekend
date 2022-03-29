@@ -4,6 +4,7 @@
 #include "../common/color.h"
 #include "../common/ray.h"
 #include "../object/hit_record.h"
+#include "scatter_record.h"
 
 struct hit_record;
 
@@ -17,15 +18,16 @@ class material {
                          color& attenuation,
                          ray& scattered) const = 0;
 
+
+    // 以下为 pdf 的形式
     // TODO 因为现在并不是所有材质都实现了这个函数, 因此我们不将其定义为纯虚函数
     // Lambertian 实现了
     virtual bool scatter(const ray& r_in,
                          const hit_record& rec,
-                         color& attenuation,
-                         ray& scattered,
-                         double& pdf) const {
+                         scatter_record& srec) const {
         return false;
     }
+
     virtual double scattering_pdf(const ray& r_in,
                                   const hit_record& rec,
                                   ray& scattered) const {

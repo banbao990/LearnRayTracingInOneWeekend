@@ -12,6 +12,7 @@
 #include "material/lambertian.h"
 #include "material/material.h"
 #include "material/metal.h"
+#include "material/scatter_record.h"
 #include "object/aabb.h"
 #include "object/box.h"
 #include "object/box_compare.h"
