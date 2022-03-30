@@ -7,27 +7,23 @@
 
 // 朗伯材质, 反射方向满足余弦定律
 class lambertian : public material {
-   private:
-    shared_ptr<texture> albedo;
+private:
+  shared_ptr<texture> albedo;
 
-   public:
-    lambertian();
-    lambertian(color _albebo);
-    lambertian(shared_ptr<texture> _albebo);
-    ~lambertian();
+public:
+  lambertian();
+  lambertian(color _albebo);
+  lambertian(shared_ptr<texture> _albebo);
+  ~lambertian();
 
-    virtual bool scatter(const ray& r_in,
-                         const hit_record& rec,
-                         color& attenuation,
-                         ray& scattered) const override;
+  virtual bool scatter(const ray &r_in, const hit_record &rec,
+                       color &attenuation, ray &scattered) const override;
 
-    virtual bool scatter(const ray& r_in,
-                         const hit_record& rec,
-                         scatter_record& srec) const override;
+  virtual bool scatter(const ray &r_in, const hit_record &rec,
+                       scatter_record &srec) const override;
 
-    virtual double scattering_pdf(const ray& r_in,
-                                  const hit_record& rec,
-                                  ray& scattered) const override;
+  virtual double scattering_pdf(const ray &r_in, const hit_record &rec,
+                                ray &scattered) const override;
 };
 
 #endif

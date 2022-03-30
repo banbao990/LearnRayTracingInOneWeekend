@@ -5,18 +5,18 @@
 
 // 图片纹理
 class image_texture : public texture {
-   private:
-    unsigned char* data;
-    int height, width;
-    int bytes_per_scanline;
+private:
+  unsigned char *data;
+  int height, width;
+  int bytes_per_scanline;
 
-   public:
-    const static int bytes_per_pixel = 3;
+public:
+  const static int bytes_per_pixel = 3;
 
-    image_texture();
-    image_texture(const char* filename);
-    ~image_texture();
-    virtual color value(double u, double v, const point3& p) const override;
+  image_texture();
+  image_texture(const char *filename);
+  ~image_texture();
+  virtual color value(double u, double v, const point3 &p) const override;
 };
 
 #endif

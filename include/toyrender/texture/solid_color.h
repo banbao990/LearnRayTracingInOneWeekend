@@ -5,16 +5,16 @@
 #include "texture.h"
 
 class solid_color : public texture {
-   private:
-    color color_value;
+private:
+  color color_value;
 
-   public:
-    solid_color();
-    solid_color(color c);
-    solid_color(double r, double g, double b);
-    ~solid_color();
+public:
+  solid_color();
+  solid_color(color c);
+  solid_color(double r, double g, double b);
+  ~solid_color();
 
-    virtual color value(double u, double v, const point3 &p) const override;
+  virtual color value(double u, double v, const point3 &p) const override;
 };
 
 #endif

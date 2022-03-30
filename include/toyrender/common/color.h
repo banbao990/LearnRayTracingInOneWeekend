@@ -4,7 +4,7 @@
 
 #include "vec3.h"
 
-using color = vec3;  // RGB color
+using color = vec3; // RGB color
 
 // 输出一行颜色值 "R G B"
 void write_color(std::ostream &out, color pixel_color, int spp);

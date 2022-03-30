@@ -7,5 +7,5 @@ solid_color::solid_color(double r, double g, double b) : color_value(r, g, b) {}
 solid_color::~solid_color() {}
 
 color solid_color::value(double u, double v, const point3 &p) const {
-    return color_value;
+  return color_value;
 }

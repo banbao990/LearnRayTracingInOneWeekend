@@ -7,10 +7,10 @@
 #include "../utils/h_help.h"
 
 struct scatter_record {
-    ray specular_ray;
-    bool is_specular;
-    shared_ptr<pdf> pdf_ptr;
-    color attenuation;
+  ray specular_ray;
+  bool is_specular;
+  shared_ptr<pdf> pdf_ptr;
+  color attenuation;
 };
 
 #endif

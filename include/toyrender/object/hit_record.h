@@ -12,15 +12,15 @@ using std::shared_ptr;
 
 // 保存光线击中的点的信息
 struct hit_record {
-    point3 p;
-    vec3 normal;
-    double t;
-    double u, v;      // 记录纹理位置
-    bool front_face;  // true: 外面往里, false: 里面往外
-    shared_ptr<material> mat_ptr;
+  point3 p;
+  vec3 normal;
+  double t;
+  double u, v;     // 记录纹理位置
+  bool front_face; // true: 外面往里, false: 里面往外
+  shared_ptr<material> mat_ptr;
 
-    // 设置 front_face, 判定是内部还是外部
-    void set_face_normal(const ray& r, const vec3& outward_normal);
+  // 设置 front_face, 判定是内部还是外部
+  void set_face_normal(const ray &r, const vec3 &outward_normal);
 };
 
 #endif

@@ -2,3 +2,5 @@
 /ppm/*
 .vscode/*
 /src/ignore/*
+!/src/ignore/*.cpp
+!/src/ignore/*.sh

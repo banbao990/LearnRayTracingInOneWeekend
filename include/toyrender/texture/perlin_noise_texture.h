@@ -5,15 +5,15 @@
 #include "texture.h"
 
 class perlin_noise_texture : public texture {
-   private:
-    perlin noise;
-    double scale;
+private:
+  perlin noise;
+  double scale;
 
-   public:
-    perlin_noise_texture(double _scale = 1.0);
-    ~perlin_noise_texture();
+public:
+  perlin_noise_texture(double _scale = 1.0);
+  ~perlin_noise_texture();
 
-    virtual color value(double u, double v, const point3& p) const override;
+  virtual color value(double u, double v, const point3 &p) const override;
 };
 
 #endif

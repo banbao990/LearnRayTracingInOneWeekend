@@ -10,17 +10,17 @@ using std::shared_ptr;
 // 包含了整个场景的若干信息
 // 相机位置、整个场景的信息、长宽比、背景颜色(环境光)
 class scene_config {
-   public:
-    double aspect_ratio;
-    double image_width;
-    shared_ptr<camera> cam;
-    shared_ptr<hittable_list> world;  // 整个场景
-    color background_color;           // 默认背景色为全黑
-    shared_ptr<hittable> light = nullptr;  // 光源, 用于采样(暂时只是单个光源)
+public:
+  double aspect_ratio;
+  double image_width;
+  shared_ptr<camera> cam;
+  shared_ptr<hittable_list> world; // 整个场景
+  color background_color;          // 默认背景色为全黑
+  shared_ptr<hittable> light = nullptr; // 光源, 用于采样(暂时只是单个光源)
 
-   public:
-    scene_config();
-    ~scene_config();
+public:
+  scene_config();
+  ~scene_config();
 };
 
 scene_config::scene_config() {}
