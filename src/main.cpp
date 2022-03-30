@@ -141,7 +141,9 @@ int main(int argc, char **argv) {
         double u = (j + random_double()) / (image_width - 1);
         double v = (i + random_double()) / (image_height - 1);
         ray r = cam->get_ray(u, v);
-        pixel_color += ray_color_world(r, config, max_depth);
+        color now_color = ray_color_world(r, config, max_depth);
+        now_color.check_nan(); // outlier
+        pixel_color += now_color;
         // pixel_color += ray_color_world(r, world_bvh, max_depth);
       }
       image_to_render[i][j] = pixel_color;

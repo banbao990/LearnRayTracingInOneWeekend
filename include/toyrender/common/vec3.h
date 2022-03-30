@@ -56,6 +56,8 @@ public:
 
   friend std::ostream &operator<<(std::ostream &out, const vec3 &v);
 
+  void check_nan();
+
   //
   // static
   //

@@ -102,6 +102,18 @@ std::ostream &operator<<(std::ostream &out, const vec3 &v) {
   return out << '(' << v.e[0] << ", " << v.e[1] << ", " << v.e[2] << ')';
 }
 
+void vec3::check_nan() {
+  if (e[0] != e[0]) {
+    e[0] = 0;
+  }
+  if (e[1] != e[1]) {
+    e[1] = 0;
+  }
+  if (e[2] != e[2]) {
+    e[2] = 0;
+  }
+}
+
 //
 // static 函数
 //
