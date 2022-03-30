@@ -1,4 +1,5 @@
 #include <toyrender/object/hittable_list.h>
+#include <toyrender/utils/rtweekend.h>
 
 hittable_list::hittable_list() { objects.clear(); }
 hittable_list::hittable_list(shared_ptr<hittable> obj) { add(obj); }
@@ -48,4 +49,20 @@ bool hittable_list::bounding_box(double time0, double time1,
     }
   }
   return true;
+}
+
+// PDF
+vec3 hittable_list::random(const point3 &origin) const {
+  int idx = random_int(0, objects.size());
+  return objects[idx]->random(origin);
+}
+
+double hittable_list::pdf_value(const point3 &origin,
+                                const vec3 &direction) const {
+  double weight = 1.0 / objects.size();
+  double sum = 0.0;
+  for (const auto &o : objects) {
+    sum += o->pdf_value(origin, direction);
+  }
+  return weight * sum;
 }

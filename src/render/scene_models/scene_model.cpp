@@ -294,9 +294,9 @@ void cornell_box(shared_ptr<scene_config> &config) {
   world->add(make_shared<yz_rect>(0, 555, 0, 555, 0, red));
   // 光源稍微隔开一点距离
   // world->add(make_shared<xz_rect>(213, 343, 227, 332, 554, light));
-  config->light = make_shared<flip_face>(
+  auto light_object = make_shared<flip_face>(
       make_shared<xz_rect>(213, 343, 227, 332, 554, light));
-  world->add(config->light);
+  world->add(light_object);
   world->add(make_shared<xz_rect>(0, 555, 0, 555, 0, white));
   world->add(make_shared<xz_rect>(0, 555, 0, 555, 555, white));
   world->add(make_shared<xy_rect>(0, 555, 0, 555, 555, white));
@@ -321,8 +321,13 @@ void cornell_box(shared_ptr<scene_config> &config) {
 
   // 箱子换为球体
   auto glass = make_shared<dielectric>(1.5);
-  config->light = make_shared<sphere>(point3(190, 90, 190), 90, glass);
-  world->add(config->light);
+  auto ball = make_shared<sphere>(point3(190, 90, 190), 90, glass);
+  world->add(ball);
+
+  auto important_item = make_shared<hittable_list>();
+  important_item->add(light_object);
+  important_item->add(ball);
+  config->important_item = important_item;
 
   config->world = world;
 }
@@ -357,9 +362,9 @@ void cornell_box_specular(shared_ptr<scene_config> &config) {
   world->add(make_shared<yz_rect>(0, 555, 0, 555, 555, green));
   world->add(make_shared<yz_rect>(0, 555, 0, 555, 0, red));
   // 光源稍微隔开一点距离
-  config->light = make_shared<flip_face>(
+  config->important_item = make_shared<flip_face>(
       make_shared<xz_rect>(213, 343, 227, 332, 554, light));
-  world->add(config->light);
+  world->add(config->important_item);
   world->add(make_shared<xz_rect>(0, 555, 0, 555, 0, white));
   world->add(make_shared<xz_rect>(0, 555, 0, 555, 555, white));
   world->add(make_shared<xy_rect>(0, 555, 0, 555, 555, white));

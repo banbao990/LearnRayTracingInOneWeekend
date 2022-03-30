@@ -222,10 +222,15 @@ color ray_color_world(const ray &r, const shared_ptr<scene_config> &config,
            ray_color_world(srec.specular_ray, config, depth - 1);
   }
 
-  auto p1 = make_shared<hittable_pdf>(config->light, rec.p);
-  mixture_pdf pdf(p1, srec.pdf_ptr);
-  scattered_ray = ray(rec.p, pdf.generate(), r.get_time());
-  pdf_val = pdf.value(scattered_ray.get_direction());
+  shared_ptr<pdf> pdf;
+  // if (config->important_item != nullptr) {
+  auto p1 = make_shared<hittable_pdf>(config->important_item, rec.p);
+  pdf = make_shared<mixture_pdf>(p1, srec.pdf_ptr);
+  scattered_ray = ray(rec.p, pdf->generate(), r.get_time());
+  // } else {
+  // pdf = srec.pdf_ptr;
+  // }
+  pdf_val = pdf->value(scattered_ray.get_direction());
 
   // 非光源(可能发光)
   return emitted +
