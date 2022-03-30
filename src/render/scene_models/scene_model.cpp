@@ -319,11 +319,16 @@ void cornell_box(shared_ptr<scene_config>& config) {
     box1 = make_shared<translate>(box1, vec3(265, 0, 295));
     world->add(box1);
 
-    shared_ptr<hittable> box2 =
-        make_shared<box>(point3(0, 0, 0), point3(165, 165, 165), white);
-    box2 = make_shared<rotate_y>(box2, -18);
-    box2 = make_shared<translate>(box2, vec3(130, 0, 65));
-    world->add(box2);
+    // shared_ptr<hittable> box2 =
+    //     make_shared<box>(point3(0, 0, 0), point3(165, 165, 165), white);
+    // box2 = make_shared<rotate_y>(box2, -18);
+    // box2 = make_shared<translate>(box2, vec3(130, 0, 65));
+    // world->add(box2);
+
+    // 箱子换为球体
+    auto glass = make_shared<dielectric>(1.5);
+    config->light = make_shared<sphere>(point3(190, 90, 190), 90, glass);
+    world->add(config->light);
 
     config->world = world;
 }

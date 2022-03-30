@@ -78,8 +78,8 @@ int main(int argc, char** argv) {
     // earth(config);
     // simple_light(config);
     // simple_light2(config);
-    // cornell_box(config);
-    cornell_box_specular(config);
+    cornell_box(config);
+    // cornell_box_specular(config);
     // cornell_box_smoke(config);
     // rtnw_final_scene(config);
 

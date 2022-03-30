@@ -28,6 +28,10 @@ class sphere : public hittable {
 
     virtual bool bounding_box(double time0, double time1,
                               aabb& output_box) const override;
+
+    virtual vec3 random(const vec3& origin) const override;
+    virtual double pdf_value(const point3& origin, const vec3& direction) const override;
+
     //
     // static
     //

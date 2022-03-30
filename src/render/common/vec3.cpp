@@ -179,3 +179,18 @@ vec3 vec3::refract(const vec3& ray_in, const vec3& normal,
     vec3 para = -std::sqrt(1 - pers.length_squared()) * normal;
     return pers + para;
 }
+
+vec3 vec3::random_to_sphere(double radius, double distance_squared) {
+    double r1 = random_double();
+    double r2 = random_double();
+
+    double cosine_max = sqrt(1 - radius*radius/distance_squared);
+    double z = 1 + r2*(cosine_max - 1);
+    double t1 = sqrt(1 - z*z);
+    double phi = pi2 * r1;
+
+    double x = cos(phi)*t1;
+    double y = sin(phi)*t1;
+
+    return vec3(x, y, z);
+}

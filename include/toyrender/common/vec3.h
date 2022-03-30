@@ -85,6 +85,11 @@ class vec3 {
     static vec3 refract(const vec3& ray_in,
                         const vec3& normal,
                         double refraction_ratio);
+
+    // 采样一个单位长度的出射方向, 起点在 (0,0,0), 方向和球体有交点
+    // 球圆心(0,0,\sqrt{distance_squared}), 半径 radius
+    // 在这个立体角内部均匀后采样
+    static vec3 random_to_sphere(double radius, double distance_squared);
 };
 
 // 声明别名

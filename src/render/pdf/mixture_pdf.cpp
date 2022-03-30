@@ -18,4 +18,7 @@ vec3 mixture_pdf::generate() const {
 
 double mixture_pdf::value(const vec3& direction) const {
     return 0.5 * (p[0]->value(direction) + p[1]->value(direction));
+    // double a = p[0]->value(direction) ;
+    // double b = p[1]->value(direction) ;
+    // return 0.5*(a+b);
 }

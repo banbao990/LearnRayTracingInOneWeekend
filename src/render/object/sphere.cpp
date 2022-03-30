@@ -2,6 +2,7 @@
 
 #include <cmath>
 #include <toyrender/utils/rtweekend.h>
+#include <toyrender/common/onb.h>
 
 sphere::sphere() {}
 sphere::sphere(double _radius) : radius(_radius) {}
@@ -46,6 +47,28 @@ bool sphere::bounding_box(double time0, double time1, aabb& output_box) const {
     // 不会动
     output_box = aabb(center - radius, center + radius);
     return true;
+}
+
+
+
+vec3 sphere::random(const vec3 &origin) const {
+    vec3 direction = center - origin;
+    double distance_squared = direction.length_squared();
+    onb uvw;
+    uvw.build_from_w(direction);
+    return uvw.local(vec3::random_to_sphere(radius, distance_squared));
+}
+
+double sphere::pdf_value(const point3 &origin, const vec3 &direction) const {
+    hit_record rec;
+    if(!this->hit(ray(origin, direction), 0.001, infinity, rec)) {
+        return 0.0;
+    }
+
+    double cosine_max = sqrt(1-radius*radius/(center - origin).length_squared());
+    double pdf = 1/(pi2*(1 - cosine_max));
+
+    return pdf;
 }
 
 //

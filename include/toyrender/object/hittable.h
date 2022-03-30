@@ -4,6 +4,7 @@
 #include "../common/ray.h"
 #include "aabb.h"
 #include "hit_record.h"
+#include "../utils/h_help.h"
 
 // 场景中的物体
 class hittable {
@@ -17,13 +18,14 @@ class hittable {
                               aabb& output_box) const = 0;
 
     // 采样, 朝着这个物体采样
-    virtual vec3 random(const point3& origin) const { return vec3(1, 0, 0); }
+    virtual vec3 random(const point3& origin) const { 
+         CHECK_OVERRIDE("hittable", "random");
+         return vec3(1, 0, 0); 
+    }
+    
     virtual double pdf_value(const point3& origin,
                              const vec3& direction) const {
-        static volatile int ccc = 0;
-        if (ccc++ < 3) {
-            std::cout << "hittable: " << ccc << std::endl;
-        }
+        CHECK_OVERRIDE("hittable", "pdf_value");
         return 0.0;
     };
 };
