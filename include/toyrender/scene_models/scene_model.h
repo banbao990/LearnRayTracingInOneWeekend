@@ -28,4 +28,6 @@ void cornell_box_specular(shared_ptr<scene_config> &config);
 void cornell_box_smoke(shared_ptr<scene_config> &config);
 void rtnw_final_scene(shared_ptr<scene_config> &config);
 
+void toy_scene1(shared_ptr<scene_config> &config);
+
 #endif
