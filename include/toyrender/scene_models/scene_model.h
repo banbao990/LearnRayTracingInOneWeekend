@@ -23,6 +23,7 @@ void earth(shared_ptr<scene_config> &config);
 
 void simple_light(shared_ptr<scene_config> &config);
 void simple_light2(shared_ptr<scene_config> &config);
+void cornell_box_origin(shared_ptr<scene_config> &config);
 void cornell_box(shared_ptr<scene_config> &config);
 void cornell_box_specular(shared_ptr<scene_config> &config);
 void cornell_box_smoke(shared_ptr<scene_config> &config);
